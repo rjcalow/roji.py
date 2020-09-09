@@ -1,5 +1,5 @@
 ## About
-A roji.py is a WIP static site generator project aiming for simplicity and the digital garden format 🌱. 
+Roji.py is a WIP static site generator project aiming for simplicity and the digital garden format 🌱. 
 
 ## Why?
 Most static site generators concentrate on the blog format. Frustrated, I made my own so that I could transform academic and personal notes into a simple website.
