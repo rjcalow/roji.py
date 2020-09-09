@@ -10,7 +10,9 @@ Rather than a blog -a restrictive stream of self promotion and diarrhoea, a digi
 
 # Starting points
 
-- [[a page]]
+- [[a page]] - internal links are made by brackets
 
 - [[gardens]]
+
+- [[image example]]
 
