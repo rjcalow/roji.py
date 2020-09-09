@@ -31,7 +31,7 @@ path = os.getcwd()
 # where .md files are:
 in_folder = path + p + "in" + p
 # where the html, imgs and scripts will go:
-out_folder = path + p + "public" + p
+out_folder = path + p + "docs" + p
 # where the images are
 image_folder = path + p + "imgs" + p
 # where any scripts are

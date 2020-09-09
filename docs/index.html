@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script src="scripts/sakura.js"></script>
+    <title>HOME</title>
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      .header {
+        padding-top: 10px;
+        padding-right: 0px;
+        padding-bottom: 30px;
+        padding-left: 0px;
+
+        font-size: 1.1em;
+      }
+
+      .header a {
+        float: left;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .header a.logo {
+        font-weight: bold;
+      }
+
+      .header a:hover {
+      }
+
+      .header-right {
+        float: right;
+      }
+
+      @media screen and (max-width: 600px) {
+        .header a {
+          float: none;
+          display: block;
+          padding-top: 10px;
+          text-align: left;
+        }
+        .header-right {
+          float: none;
+        }
+      }
+
+      .footer {
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <a href="#" class="logo">My digital garden 🌱</a>
+      <div class="header-right">
+        <a onclick="toggleTheme()" href="javascript:void(0);">light/dark</a>
+      </div>
+    </div>
+
+    <h1>Digital garden?</h1>
+<p>Rather than a blog -a restrictive stream of self promotion and diarrhoea, a digital garden is a place to grow ideas. For a better explanation see <a href="https://maggieappleton.com/garden-history">maggieappleton.com/garden-history</a></p>
+<h1>Starting points</h1>
+<ul>
+<li>
+<p><a href="a-page/">[[a page]]</a></p>
+</li>
+<li>
+<p><a href="gardens/">[[gardens]]</a></p>
+</li>
+</ul>
+
+    <p></p>
+    <div class="footer">
+      <p>Last updated: 2020-9-8</p>
+      <p>
+        Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
+        <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
+      </p>
+    </div>
+  </body>
+</html>
