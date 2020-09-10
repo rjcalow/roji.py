@@ -18,9 +18,11 @@ python3 roji.py
 This will create a html site in */docs*. Changes can be made in the template.html and roji.py itself. 
 
 ## Things to do 🍃
-- add anchor points 
+- generate a sitemap or directory 
+- add a search?
+- add anchor points for headers
 - allow for images on root index
 - better js for switching css
-- rewrite paths
+- rewrite paths 
 - be more creative
 - have more fun 🙌
