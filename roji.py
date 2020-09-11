@@ -3,10 +3,11 @@
 """
 roji.py converts a folder of markdown files into a static digital garden with Sakura.css 
 https://github.com/rjcalow/roji.py
-version 0.1 9/9/2020
+11/9/2020
 """
 import yaml
 import markdown
+#from markdown.extensions.toc import TocExtension
 import pystache
 import os
 import platform
@@ -116,10 +117,23 @@ def read_md(file):
         md_data = []
         for s in infile:
             s = convert_brackets_to_md_links(s, file)
+            s = inject_extra_markdown(file,s)
             md_data.append(s)
         md = ''.join(md_data)
 
     # adding extras to the yaml here
+    ym = inject_extra_yaml(file,ym)
+
+    info = yaml.load(ym, yaml.SafeLoader)
+    content = markdown.markdown(md, extensions=['toc'])
+
+    return info, content
+
+def  inject_extra_markdown(file,s):
+    # trying to create anchor points
+    return s
+
+def inject_extra_yaml(file, ym):
     # further changes could be made here for optional content
     ym = ym + 'site_name: "' + site_name + '"\n'
     if "index" in file:
@@ -128,12 +142,7 @@ def read_md(file):
     else:
         ym = ym + 'script: "../scripts/sakura.js"\n'
         ym = ym + 'index_url: "../"'
-
-    info = yaml.load(ym, yaml.SafeLoader)
-    content = markdown.markdown(md)
-
-    return info, content
-
+    return ym
 
 def convert_brackets_to_md_links(line, file):
     try:

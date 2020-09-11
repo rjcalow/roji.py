@@ -5,49 +5,18 @@
     <meta charset="utf-8" />
     <script src="../scripts/sakura.js"></script>
     <title>Images</title>
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+
     <style>
-      .header {
-        padding-top: 10px;
-        padding-right: 0px;
-        padding-bottom: 30px;
-        padding-left: 0px;
-
-        font-size: 1.1em;
+      table,
+      th,
+      td {
+        vertical-align: text-bottom;
       }
-
-      .header a {
-        float: left;
-        text-align: center;
-        text-decoration: none;
-      }
-
-      .header a.logo {
-        font-weight: bold;
-      }
-
-      .header a:hover {
-      }
-
-      .header-right {
-        float: right;
-      }
-
-      @media screen and (max-width: 600px) {
-        .header a {
-          float: none;
-          display: block;
-          padding-top: 10px;
-          text-align: left;
-        }
-        .header-right {
-          float: none;
-        }
-      }
-
       .footer {
         padding-top: 20px;
       }
@@ -55,14 +24,20 @@
   </head>
 
   <body>
-    <div class="header">
-      <a href="../" class="logo">My digital garden 🌱</a>
-      <div class="header-right">
-        <a onclick="toggleTheme()" href="javascript:void(0);">light/dark</a>
-      </div>
-    </div>
-
-    <h1>Images</h1>
+    <table>
+      <tbody>
+        <tr>
+          <td align="left"><a href="../" class="logo"><h4>My digital garden 🌱</a></h4></td>
+          <td align="right">
+            
+              <a onclick="toggleTheme()" href="javascript:void(0);">&#x1F317</a>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p></p>
+    <h1 id="images">Images</h1>
 <p>Images go in the <em>imgs</em> folder with the markdown like so:
 <code>![](../imgs/bridge.jpg)</code></p>
 <p><img alt="" src="../imgs/bridge.jpg" /></p><h3>Backlinks</h3>
@@ -75,11 +50,19 @@
 
     <p></p>
     <div class="footer">
-      <p>Last updated: 2020-9-8</p>
-      <p>
-        Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
+        <table>
+      <tbody>
+        <tr>
+          <td align="left">Page updated: 2020-9-8</td>
+          <td align="right">Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
-      </p>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
     </div>
   </body>
 </html>

@@ -5,49 +5,18 @@
     <meta charset="utf-8" />
     <script src="../scripts/sakura.js"></script>
     <title>Markdown example</title>
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+
     <style>
-      .header {
-        padding-top: 10px;
-        padding-right: 0px;
-        padding-bottom: 30px;
-        padding-left: 0px;
-
-        font-size: 1.1em;
+      table,
+      th,
+      td {
+        vertical-align: text-bottom;
       }
-
-      .header a {
-        float: left;
-        text-align: center;
-        text-decoration: none;
-      }
-
-      .header a.logo {
-        font-weight: bold;
-      }
-
-      .header a:hover {
-      }
-
-      .header-right {
-        float: right;
-      }
-
-      @media screen and (max-width: 600px) {
-        .header a {
-          float: none;
-          display: block;
-          padding-top: 10px;
-          text-align: left;
-        }
-        .header-right {
-          float: none;
-        }
-      }
-
       .footer {
         padding-top: 20px;
       }
@@ -55,14 +24,20 @@
   </head>
 
   <body>
-    <div class="header">
-      <a href="../" class="logo">My digital garden 🌱</a>
-      <div class="header-right">
-        <a onclick="toggleTheme()" href="javascript:void(0);">light/dark</a>
-      </div>
-    </div>
-
-    <h1>Markdown: Syntax</h1>
+    <table>
+      <tbody>
+        <tr>
+          <td align="left"><a href="../" class="logo"><h4>My digital garden 🌱</a></h4></td>
+          <td align="right">
+            
+              <a onclick="toggleTheme()" href="javascript:void(0);">&#x1F317</a>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p></p>
+    <h1 id="markdown-syntax">Markdown: Syntax</h1>
 <ul>
 <li><a href="#overview">Overview</a><ul>
 <li><a href="#philosophy">Philosophy</a></li>
@@ -95,8 +70,8 @@
 <p><strong>Note:</strong> This document is itself written using Markdown; you
 can <a href="/projects/markdown/syntax.text">see the source for it by adding '.text' to the URL</a>.</p>
 <hr />
-<h2>Overview</h2>
-<h3>Philosophy</h3>
+<h2 id="overview">Overview</h2>
+<h3 id="philosophy">Philosophy</h3>
 <p>Markdown is intended to be as easy-to-read and easy-to-write as is feasible.</p>
 <p>Readability, however, is emphasized above all else. A Markdown-formatted
 document should be publishable as-is, as plain text, without looking
@@ -105,8 +80,8 @@ Markdown's syntax has been influenced by several existing text-to-HTML
 filters -- including <a href="http://docutils.sourceforge.net/mirror/setext.html">Setext</a>, <a href="http://www.aaronsw.com/2002/atx/">atx</a>, <a href="http://textism.com/tools/textile/">Textile</a>, <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>,
 <a href="http://www.triptico.com/software/grutatxt.html">Grutatext</a>, and <a href="http://ettext.taint.org/doc/">EtText</a> -- the single biggest source of
 inspiration for Markdown's syntax is the format of plain text email.</p>
-<h2>Block Elements</h2>
-<h3>Paragraphs and Line Breaks</h3>
+<h2 id="block-elements">Block Elements</h2>
+<h3 id="paragraphs-and-line-breaks">Paragraphs and Line Breaks</h3>
 <p>A paragraph is simply one or more consecutive lines of text, separated
 by one or more blank lines. (A blank line is any line that looks like a
 blank line -- a line containing nothing but spaces or tabs is considered
@@ -118,14 +93,14 @@ Type's "Convert Line Breaks" option) which translate every line break
 character in a paragraph into a <code>&lt;br /&gt;</code> tag.</p>
 <p>When you <em>do</em> want to insert a <code>&lt;br /&gt;</code> break tag using Markdown, you
 end a line with two or more spaces, then type return.</p>
-<h3>Headers</h3>
+<h3 id="headers">Headers</h3>
 <p>Markdown supports two styles of headers, [Setext] [1] and [atx] [2].</p>
 <p>Optionally, you may "close" atx-style headers. This is purely
 cosmetic -- you can use this if you think it looks better. The
 closing hashes don't even need to match the number of hashes
 used to open the header. (The number of opening hashes
 determines the header level.)</p>
-<h3>Blockquotes</h3>
+<h3 id="blockquotes">Blockquotes</h3>
 <p>Markdown uses email-style <code>&gt;</code> characters for blockquoting. If you're
 familiar with quoting passages of text in an email message, then you
 know how to create a blockquote in Markdown. It looks best if you hard
@@ -158,7 +133,7 @@ adding additional levels of <code>&gt;</code>:</p>
 <p>Blockquotes can contain other Markdown elements, including headers, lists,
 and code blocks:</p>
 <blockquote>
-<h2>This is a header.</h2>
+<h2 id="this-is-a-header">This is a header.</h2>
 <ol>
 <li>This is the first list item.</li>
 <li>This is the second list item.</li>
@@ -170,7 +145,7 @@ and code blocks:</p>
 <p>Any decent text editor should make email-style quoting easy. For
 example, with BBEdit, you can make a selection and choose Increase
 Quote Level from the Text menu.</p>
-<h3>Lists</h3>
+<h3 id="lists">Lists</h3>
 <p>Markdown supports ordered (numbered) and unordered (bulleted) lists.</p>
 <p>Unordered lists use asterisks, pluses, and hyphens -- interchangably
 -- as list markers:</p>
@@ -280,7 +255,7 @@ to be indented <em>twice</em> -- 8 spaces or two tabs:</p>
 </code></pre>
 </li>
 </ul>
-<h3>Code Blocks</h3>
+<h3 id="code-blocks">Code Blocks</h3>
 <p>Pre-formatted code blocks are used for writing about programming or
 markup source code. Rather than forming normal paragraphs, the lines
 of a code block are interpreted literally. Markdown wraps a code block
@@ -312,8 +287,8 @@ it's also easy to use Markdown to write about Markdown's own syntax.</p>
 <p><code>tell application "Foo"
     beep
 end tell</code></p>
-<h2>Span Elements</h2>
-<h3>Links</h3>
+<h2 id="span-elements">Span Elements</h2>
+<h3 id="links">Links</h3>
 <p>Markdown supports two style of links: <em>inline</em> and <em>reference</em>.</p>
 <p>In both styles, the link text is delimited by [square brackets].</p>
 <p>To create an inline link, use a set of regular parentheses immediately
@@ -322,7 +297,7 @@ put the URL where you want the link to point, along with an <em>optional</em>
 title for the link, surrounded in quotes. For example:</p>
 <p>This is <a href="http://example.com/">an example</a> inline link.</p>
 <p><a href="http://example.net/">This link</a> has no title attribute.</p>
-<h3>Emphasis</h3>
+<h3 id="emphasis">Emphasis</h3>
 <p>Markdown treats asterisks (<code>*</code>) and underscores (<code>_</code>) as indicators of
 emphasis. Text wrapped with one <code>*</code> or <code>_</code> will be wrapped with an
 HTML <code>&lt;em&gt;</code> tag; double <code>*</code>'s or <code>_</code>'s will be wrapped with an HTML
@@ -331,12 +306,12 @@ HTML <code>&lt;em&gt;</code> tag; double <code>*</code>'s or <code>_</code>'s wi
 <p><em>single underscores</em></p>
 <p><strong>double asterisks</strong></p>
 <p><strong>double underscores</strong></p>
-<h3>Code</h3>
+<h3 id="code">Code</h3>
 <p>To indicate a span of code, wrap it with backtick quotes (<code>`</code>).
 Unlike a pre-formatted code block, a code span indicates code within a
 normal paragraph. For example:</p>
 <p>Use the <code>printf()</code> function.</p>
-<h1>source:</h1>
+<h1 id="source">source:</h1>
 <p><a href="https://github.com/mxstbr/markdown-test-file/">https://github.com/mxstbr/markdown-test-file/</a></p><h3>Backlinks</h3>
 <p><a href="../index.html">[[index]]</a> : </p>
 <blockquote>
@@ -347,11 +322,19 @@ normal paragraph. For example:</p>
 
     <p></p>
     <div class="footer">
-      <p>Last updated: 2020-9-8</p>
-      <p>
-        Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
+        <table>
+      <tbody>
+        <tr>
+          <td align="left">Page updated: 2020-9-8</td>
+          <td align="right">Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
-      </p>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
     </div>
   </body>
 </html>
