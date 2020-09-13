@@ -4,12 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <script src="scripts/sakura.js"></script>
-    <title>HOME</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
+    <title>roji.py</title>
+    <meta name="description" content="Digital garden of photography notes.">
+    <meta name="keywords" content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape">
+    <meta name="author" content="R J Calow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 
     <style>
       table,
@@ -27,7 +26,7 @@
     <table>
       <tbody>
         <tr>
-          <td align="left"><a href="#" class="logo"><h4>My digital garden 🌱</a></h4></td>
+          <td align="left"><a href="#"><h4>Roji.py digital garden 🌱</a></h4></td>
           <td align="right">
             
               <a onclick="toggleTheme()" href="javascript:void(0);">&#x1F317</a>
@@ -37,9 +36,22 @@
       </tbody>
     </table>
     <p></p>
-    <h1 id="digital-garden">Digital garden?</h1>
+    <h2>Digital garden?</h2>
 <p>Rather than a blog -a restrictive stream of self promotion and diarrhoea, a digital garden is a place to grow ideas. For a better explanation see <a href="https://maggieappleton.com/garden-history">maggieappleton.com/garden-history</a></p>
-<h1 id="starting-points">Starting points</h1>
+<h2>Change log</h2>
+<h3>13/9/2020</h3>
+<p>Changed backend from YAML and pystache to frontend and jinja2 modules. This made processing faster and gives better options. There is now a index and page template, and I'm trying to build a simple menu or categories but I'm stumped on how to organize the posts data by a topic adopted from yaml.</p>
+<p>There are also changes to layout/template, keeping it even more simple by removing extra css and using pure html tables for header.</p>
+<h4>Some influences:</h4>
+<ul>
+<li>
+<p><a href="https://dev.to/nqcm/making-a-static-site-generator-with-python-part-2-4al">Making a Static Site Generator with Python </a></p>
+</li>
+<li>
+<p><a href="https://youtu.be/Ph7oJDR71Jc">Building a Simple Static Site Generator in Python</a></p>
+</li>
+</ul>
+<h2>some example pages</h2>
 <ul>
 <li>
 <p><a href="a-page/">[[a page]]</a> - internal links are made by brackets</p>
@@ -52,12 +64,14 @@
 </li>
 </ul>
 
+  
+
     <p></p>
     <div class="footer">
         <table>
       <tbody>
         <tr>
-          <td align="left">Page updated: 2020-9-8</td>
+          <td align="left">Page updated: 13/9/2020</td>
           <td align="right">Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
             

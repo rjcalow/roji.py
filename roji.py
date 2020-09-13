@@ -3,12 +3,11 @@
 """
 roji.py converts a folder of markdown files into a static digital garden with Sakura.css 
 https://github.com/rjcalow/roji.py
-11/9/2020
+version 0.2 13/9/2020
 """
-import yaml
+import frontmatter
 import markdown
-#from markdown.extensions.toc import TocExtension
-import pystache
+from jinja2 import Environment, FileSystemLoader
 import os
 import platform
 import shutil
@@ -16,9 +15,11 @@ import re
 import time
 import http.server
 import socketserver
+import sys  # for arguments
 
+from markdown.extensions.wikilinks import WikiLinkExtension
 # site name
-site_name = "My digital garden 🌱"
+site_name = "Roji.py digital garden 🌱"
 
 # attempt at making the script work on linux or darwin, should have used pathlib
 p = ""
@@ -37,10 +38,167 @@ out_folder = path + p + "docs" + p
 image_folder = path + p + "imgs" + p
 # where any scripts are
 script_folder = path + p + "scripts" + p
-files = os.listdir(in_folder)
+
+pages_=[]
 
 
-def move_assets():
+def pages(t):
+    files = os.listdir(in_folder)
+    if t != 'all':
+        files.remove("index.md")
+    return files
+
+
+def process_markdown_files():
+    for f in pages(''):
+        if ".md" in str(f) and f != "index.md":
+            fpath = in_folder + str(f)
+            # read md file
+            metadata, content = read_md(fpath)
+            content = content + add_refences(str(f))
+            # convert md to html
+            metadata["file"] = "/" + str(f.replace(".md", "/"))
+            
+            pages_.append(metadata)
+            output = out_folder + str(f.replace(".md", p)) + "index.html"
+            render_page(output, content, metadata)
+
+
+def process_index():
+    f = in_folder + "index.md"
+    metadata, content = read_md(f)
+    content = content + add_refences(str(f))
+    output = out_folder + "index.html"
+    render_index(output, content, metadata)
+
+
+def read_md(file):
+    page = frontmatter.load(file)
+    metadata = page.metadata
+
+    # convert [[links]] and data into markdown
+    content = markdown.markdown(
+        convert_brackets_to_md_links(page.content, file))
+
+    if "topic" in metadata:
+        if "subtopic" != metadata:
+            metadata["subtopic"] = ""
+        categorize(metadata["topic"], metadata["subtopic"], file, metadata["date"])
+
+    return metadata, content
+
+
+def find_refences(name):
+    found = []
+    for f in pages('all'):
+        if ".md" in str(f):
+            with open(in_folder + f, encoding="utf8", errors='ignore') as infile:
+                for s in infile:
+                    if "[[" in s:
+                        try:
+                            linkname = re.search(r'\[\[(.*?)\]\]', s).group(1)
+                            if (name.replace(".md", "")) == (linkname.replace(" ", "-")):
+
+                                f = str(f.replace(" ", "-").replace(".md", ""))
+                                if "index" in f:
+                                    linkurl = "../" + f + ".html"
+                                else:
+                                    linkurl = "../" + f + "/"
+
+                                mdlink = "[" + f + "]("+linkurl+") : "
+
+                                found.append(mdlink + "\n >" + s)
+                        except:
+                            pass
+    return found
+
+
+def add_refences(name):
+    list_ = []
+    list_ = find_refences(name)
+    if len(list_) == 0:
+        return ""
+    string = "### Backlinks \n"
+    for l in list_:
+        string = string + str(l) + "\n"
+    string = markdown.markdown(string)
+    return string
+
+
+def convert_brackets_to_md_links(m, file):
+    # could also use markdown ext called wikilinks
+    for line in m.splitlines():
+        try:
+            linkname = re.search(r'\[\[(.*?)\]\]', line).group(1)
+            old = "[[" + linkname + "]]"
+            if "index" in file:
+                linkurl = "" + linkname.replace(" ", "-") + "/"
+            else:
+                linkurl = "../" + str(linkname.replace(" ", "-")) + "/"
+            mdlink = "[[["+str(linkname)+"]]]("+linkurl+")"
+            m = m.replace(old, mdlink)
+
+        except:
+            continue
+
+    return m
+
+
+def categorize(cat, sub, file, date):
+    filename = str(file.split(os.path.sep)[-1].replace(".md", ".html"))
+    # listt = [''.join(cat), ''.join(sub), filename, ''.join(date)]
+    # topics.append(listt)
+
+
+def create_menu():
+    # need a method for creating a basic menu
+ 
+    return()
+
+
+def render_page(filename, content, metadata):
+    template_env = Environment(loader=FileSystemLoader(searchpath='./'))
+    template = template_env.get_template('page_template.html')
+
+    foldername = str(filename.split(os.path.sep)[-2])
+
+    # check and create paths
+    # the and stops the output folder being created by the root index.html
+    if os.path.exists(out_folder + foldername) == False and foldername not in out_folder:
+        os.makedirs(out_folder + foldername)
+
+    with open(filename, 'w', encoding='utf8') as _file:
+        _file.write(
+            template.render(
+                site_name=site_name,
+                title=metadata['title'],
+                date=metadata['date'],
+                script="../scripts/sakura.js",
+                index_url="../",
+                content=content,
+            )
+        )
+
+
+def render_index(filename, content, metadata):
+    template_env = Environment(loader=FileSystemLoader(searchpath='./'))
+    template = template_env.get_template('index_template.html')
+
+    with open(filename, 'w', encoding='utf8') as _file:
+        _file.write(
+            template.render(
+                site_name=site_name,
+                title=metadata['title'],
+                date=metadata['date'],
+                script="scripts/sakura.js",
+                index_url="#",
+                content=content,
+                #menu=create_menu()
+            )
+        )
+
+
+def house_keeping():
     folders = [(image_folder), (script_folder)]
 
     for folder in folders:
@@ -61,131 +219,6 @@ def move_assets():
                             str(out_folder + foldername + p + f))
 
 
-def find_refences(name):
-    found = []
-    for f in files:
-        if ".md" in str(f):
-            with open(in_folder + f, encoding="utf8", errors='ignore') as infile:
-                for s in infile:
-                    if "[[" in s:
-                        try:
-                            linkname = re.search(r'\[\[(.*?)\]\]', s).group(1)
-                            if (name.replace(".md", "")) == (linkname.replace(" ", "-")):
-
-                                f = str(f.replace(" ", "-").replace(".md", ""))
-                                if "index" in f:
-                                    linkurl = "../" + f + ".html"
-                                else:
-                                    linkurl = "../" + f + "/"
-
-                                mdlink = "[[[" + f + "]]]("+linkurl+") : "
-
-                                found.append(mdlink + "\n >" + s)
-                        except:
-                            pass
-    return found
-
-
-def add_refences(name):
-    list_ = []
-    list_ = find_refences(name)
-    if len(list_) == 0:
-        return ""
-    string = "### Backlinks \n"
-    for l in list_:
-        string = string + str(l) + "\n"
-    string = markdown.markdown(string)
-    return string
-
-
-def read_md(file):
-    with open(file, encoding="utf8", errors='ignore') as infile:
-
-        for s in infile:
-            if s.startswith('---'):
-                break
-
-        yaml_lines = []
-        for s in infile:
-            if s.startswith('---'):
-                break
-            else:
-                yaml_lines.append(s)
-
-        ym = ''.join(yaml_lines)
-
-        md_data = []
-        for s in infile:
-            s = convert_brackets_to_md_links(s, file)
-            s = inject_extra_markdown(file,s)
-            md_data.append(s)
-        md = ''.join(md_data)
-
-    # adding extras to the yaml here
-    ym = inject_extra_yaml(file,ym)
-
-    info = yaml.load(ym, yaml.SafeLoader)
-    content = markdown.markdown(md, extensions=['toc'])
-
-    return info, content
-
-def  inject_extra_markdown(file,s):
-    # trying to create anchor points
-    return s
-
-def inject_extra_yaml(file, ym):
-    # further changes could be made here for optional content
-    ym = ym + 'site_name: "' + site_name + '"\n'
-    if "index" in file:
-        ym = ym + 'script: "scripts/sakura.js"\n'
-        ym = ym + 'index_url: "#"'
-    else:
-        ym = ym + 'script: "../scripts/sakura.js"\n'
-        ym = ym + 'index_url: "../"'
-    return ym
-
-def convert_brackets_to_md_links(line, file):
-    try:
-        linkname = re.search(r'\[\[(.*?)\]\]', line).group(1)
-
-        old = "[[" + linkname + "]]"
-        if "index" in file:
-            linkurl = "" + linkname.replace(" ", "-") + "/"
-        else:
-            linkurl = "../" + str(linkname.replace(" ", "-")) + "/"
-        mdlink = "[[["+str(linkname)+"]]]("+linkurl+")"
-        line = line.replace(old, mdlink)
-    except:
-        return line
-
-    return line
-
-
-def template():
-    with open('template.html') as infile:
-        template = infile.read()
-    return template
-
-
-def render(content, info):
-    info['content'] = content
-    html = pystache.render(template(), info)
-    return html
-
-
-def save(html, filename):
-    foldername = str(filename.split(os.path.sep)[-2])
-
-    # check and create paths
-    # the and stops the output folder being created by the root index.html
-    if os.path.exists(out_folder + foldername) == False and foldername not in out_folder:
-        os.makedirs(out_folder + foldername)
-
-    with open(filename, "w", encoding='utf8') as f:
-        f.write(html)
-        f.close()
-
-
 def serve():
     # need rewriting so that the out_folder is served
     PORT = 8000
@@ -198,40 +231,24 @@ def serve():
         httpd.serve_forever()
 
 
-def main():
+def main(args):
     start = time.time()
-    converted = 0
 
-    for f in files:
-        if ".md" in str(f):
+    process_markdown_files()
+    process_index()
+    house_keeping()
 
-            fpath = in_folder + str(f)
-
-            # read md file
-            info, content = read_md(fpath)
-            # add references
-            content = content + add_refences(str(f))
-
-            if "index.md" in f:
-                output = out_folder + str(f.replace(".md", ".html"))
-            else:
-                output = out_folder + \
-                    str(f.replace(".md", p)) + "index.html"
-
-            # convert md to html
-            html = render(content, info)
-
-            # write html
-            save(html, output)
-            converted += 1
-    # finish up
-    move_assets()
     end = time.time()
+    converted = len(os.listdir(out_folder))
     print("Generated " + str(converted) +
           " pages in ", str(end - start) + " seconds.")
-    # add a method to option server
-    serve()
+    # method to option server
+    if "serve" in args:
+        serve()
 
 
 if __name__ == "__main__":
-    main()
+    if not hasattr(sys, 'argv'):
+        sys.argv = ['']
+    #print (sys.argv)
+    main(sys.argv)
