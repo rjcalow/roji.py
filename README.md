@@ -6,16 +6,15 @@ It *aims* to be small and simple.
 
 It has [[wiki style links]], backlinks and a tag system for hyperlinking. 
 
-## About
-
-Roji.py is a WIP static site generator project aiming for simplicity and the digital garden format 🌱. An example changelog and digital garden is here [https://rjcalow.github.io/roji.py/](https://rjcalow.github.io/roji.py/)
-
 ## Why?
 
 Most static site generators concentrate on the blog format. Frustrated, I made my own, inspired by this [article](https://medium.com/swlh/a-static-site-generator-in-python-part-2-d7071da25904), so that I could transform academic and personal notes into a simple website. 
 
 ## Usage
-
+Clone the repo and install requirements 
+```
+pip install -r requirements.txt 
+```
 Add markdown files to the *in* folder and any images into *imgs*, and then run...
 
 ```
@@ -27,3 +26,7 @@ This will create a html site in */docs*. Changes can be made in the template.htm
 ## Things to do 🍃
 
 - Streamline topics
+
+## Credits
+- [https://github.com/theacodes/blog.thea.codes/](https://github.com/theacodes/blog.thea.codes/) - static site tutorial and much better code than mine.
+- [https://github.com/oxalorg/sakura](https://github.com/oxalorg/sakura) - drop-in css
