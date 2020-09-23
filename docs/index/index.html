@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <script src="./scripts/sakura.js"></script>
+    <script src="../scripts/sakura.js"></script>
     <title>roji.py</title>
     <meta name="description" content="Digital garden of photography notes.">
     <meta name="keywords" content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape">
@@ -23,6 +23,7 @@
   </head>
 
   <body>
+  
     <table>
       <tbody>
         <tr>
@@ -36,11 +37,21 @@
       </tbody>
     </table>
     <p></p>
-    <h2>Roji.py</h2>
-<p>My hobbyist attempt at a static digital garden generator for my notes.</p>
-<p>It <em>aims</em> to be small and simple.</p>
-<h2>Why?</h2>
-<p>Most static site generators concentrate on the blog format. Frustrated, I made my own, inspired by this <a href="https://medium.com/swlh/a-static-site-generator-in-python-part-2-d7071da25904">article</a>, so that I could transform academic and personal notes into a simple website.</p>
+    <h2>Digital garden?</h2>
+<p>Rather than a blog -a restrictive stream of self promotion and diarrhoea, a digital garden is a place to grow ideas. For a better explanation see <a href="https://maggieappleton.com/garden-history">maggieappleton.com/garden-history</a></p>
+<h2>Change log</h2>
+<h3>13/9/2020</h3>
+<p>Changed backend from YAML and pystache to frontend and jinja2 modules. This made processing faster and gives better options. There is now a index and page template, and I'm trying to build a simple menu or categories but I'm stumped on how to organize the posts data by a topic adopted from yaml.</p>
+<p>There are also changes to layout/template, keeping it even more simple by removing extra css and using pure html tables for header.</p>
+<h4>Some influences:</h4>
+<ul>
+<li>
+<p><a href="https://dev.to/nqcm/making-a-static-site-generator-with-python-part-2-4al">Making a Static Site Generator with Python </a></p>
+</li>
+<li>
+<p><a href="https://youtu.be/Ph7oJDR71Jc">Building a Simple Static Site Generator in Python</a></p>
+</li>
+</ul>
 <h2>some example pages</h2>
 <ul>
 <li>
@@ -54,19 +65,19 @@
 </li>
 </ul>
 
-    <h2>Topics</h2>
-    <p><a href="./examples/">examples</a>, <a href="./changes/">changes</a>, <a href="./gardening/">gardening</a>, <a href="./roji/">roji</a>, <a href="./garden/">garden</a>,</p>
-
-  <h2>Digital Garden?</h2>
-  <p>Rather than a blog -a restrictive stream of self promotion and negative connotations spearheaded by <em>influencers</em>, a digital garden is a place to grow ideas. For a better explanation see <a href="https://maggieappleton.com/garden-history">maggieappleton.com/garden-history</a>.</p>
 
     <p></p>
+
+    
+      <p></p>
+    
+    
     
     <div class="footer">
         <table>
       <tbody>
         <tr>
-          <td align="left"><small>Page updated: 23/09/2020</small></td>
+          <td align="left"><small>Page updated: 13/9/2020</small></td>
           <td align="right"><small>Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
             
@@ -74,6 +85,7 @@
         </tr>
       </tbody>
     </table>
+
 
 
     </div>

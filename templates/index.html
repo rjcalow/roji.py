@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <script src="{{script}}"></script>
-    <title>{{title}}</title>
+    <script src="{{page.script}}"></script>
+    <title>{{page.title}}</title>
     <meta name="description" content="Digital garden of photography notes.">
     <meta name="keywords" content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape">
     <meta name="author" content="R J Calow">
@@ -26,7 +26,7 @@
     <table>
       <tbody>
         <tr>
-          <td align="left"><a href="{{index_url}}"><h4>{{site_name}}</a></h4></td>
+          <td align="left"><a href="{{page.index_url}}"><h4>{{page.site_name}}</a></h4></td>
           <td align="right">
             
               <a onclick="toggleTheme()" href="javascript:void(0);">&#x1F317</a>
@@ -37,15 +37,20 @@
     </table>
     <p></p>
     {{content}}
+    <h2>Topics</h2>
+    {{page.topics}}
+  <h2>Digital Garden?</h2>
+  <p>Rather than a blog -a restrictive stream of self promotion and negative connotations spearheaded by <em>influencers</em>, a digital garden is a place to grow ideas. For a better explanation see <a href="https://maggieappleton.com/garden-history">maggieappleton.com/garden-history</a>.</p>
 
     <p></p>
+    
     <div class="footer">
         <table>
       <tbody>
         <tr>
-          <td align="left">Page updated: {{date}}</td>
-          <td align="right">Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
-        <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
+          <td align="left"><small>Page updated: {{page.date}}</small></td>
+          <td align="right"><small>Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
+        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
             
           </td>
         </tr>

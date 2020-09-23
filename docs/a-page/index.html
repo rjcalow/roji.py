@@ -23,10 +23,11 @@
   </head>
 
   <body>
+  
     <table>
       <tbody>
         <tr>
-          <td align="left"><a href="../"><h4>Roji.py digital garden 🌱</a></h4></td>
+          <td align="left"><a href="../"><h4>Digital garden 🌾</a></h4></td>
           <td align="right">
             
               <a onclick="toggleTheme()" href="javascript:void(0);">&#x1F317</a>
@@ -38,13 +39,15 @@
     <p></p>
     <h1>Markdown: Syntax</h1>
 <ul>
-<li><a href="#overview">Overview</a><ul>
+<li><a href="#overview">Overview</a>
+<ul>
 <li><a href="#philosophy">Philosophy</a></li>
 <li><a href="#html">Inline HTML</a></li>
 <li><a href="#autoescape">Automatic Escaping for Special Characters</a></li>
 </ul>
 </li>
-<li><a href="#block">Block Elements</a><ul>
+<li><a href="#block">Block Elements</a>
+<ul>
 <li><a href="#p">Paragraphs and Line Breaks</a></li>
 <li><a href="#header">Headers</a></li>
 <li><a href="#blockquote">Blockquotes</a></li>
@@ -53,14 +56,16 @@
 <li><a href="#hr">Horizontal Rules</a></li>
 </ul>
 </li>
-<li><a href="#span">Span Elements</a><ul>
+<li><a href="#span">Span Elements</a>
+<ul>
 <li><a href="#link">Links</a></li>
 <li><a href="#em">Emphasis</a></li>
 <li><a href="#code">Code</a></li>
 <li><a href="#img">Images</a></li>
 </ul>
 </li>
-<li><a href="#misc">Miscellaneous</a><ul>
+<li><a href="#misc">Miscellaneous</a>
+<ul>
 <li><a href="#backslash">Backslash Escapes</a></li>
 <li><a href="#autolink">Automatic Links</a></li>
 </ul>
@@ -85,16 +90,16 @@ inspiration for Markdown's syntax is the format of plain text email.</p>
 by one or more blank lines. (A blank line is any line that looks like a
 blank line -- a line containing nothing but spaces or tabs is considered
 blank.) Normal paragraphs should not be indented with spaces or tabs.</p>
-<p>The implication of the "one or more consecutive lines of text" rule is
-that Markdown supports "hard-wrapped" text paragraphs. This differs
+<p>The implication of the &quot;one or more consecutive lines of text&quot; rule is
+that Markdown supports &quot;hard-wrapped&quot; text paragraphs. This differs
 significantly from most other text-to-HTML formatters (including Movable
-Type's "Convert Line Breaks" option) which translate every line break
+Type's &quot;Convert Line Breaks&quot; option) which translate every line break
 character in a paragraph into a <code>&lt;br /&gt;</code> tag.</p>
 <p>When you <em>do</em> want to insert a <code>&lt;br /&gt;</code> break tag using Markdown, you
 end a line with two or more spaces, then type return.</p>
 <h3>Headers</h3>
 <p>Markdown supports two styles of headers, [Setext] [1] and [atx] [2].</p>
-<p>Optionally, you may "close" atx-style headers. This is purely
+<p>Optionally, you may &quot;close&quot; atx-style headers. This is purely
 cosmetic -- you can use this if you think it looks better. The
 closing hashes don't even need to match the number of hashes
 used to open the header. (The number of opening hashes
@@ -117,6 +122,8 @@ line of a hard-wrapped paragraph:</p>
 <p>This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
 Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.</p>
+</blockquote>
+<blockquote>
 <p>Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse
 id sem consectetuer libero luctus adipiscing.</p>
 </blockquote>
@@ -138,7 +145,7 @@ and code blocks:</p>
 <li>This is the second list item.</li>
 </ol>
 <p>Here's some example code:</p>
-<pre><code>return shell_exec("echo $input | $markdown_script");
+<pre><code>return shell_exec(&quot;echo $input | $markdown_script&quot;);
 </code></pre>
 </blockquote>
 <p>Any decent text editor should make email-style quoting easy. For
@@ -181,7 +188,7 @@ Markdown produces from the above list is:</p>
 <li>Parish</li>
 </ol>
 <p>or even:</p>
-<ol>
+<ol start="3">
 <li>Bird</li>
 <li>McHale</li>
 <li>Parish</li>
@@ -193,10 +200,10 @@ But if you want to be lazy, you don't have to.</p>
 <p>To make lists look nice, you can wrap items with hanging indents:</p>
 <ul>
 <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-    Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
-    viverra nec, fringilla in, laoreet vitae, risus.</li>
+Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
+viverra nec, fringilla in, laoreet vitae, risus.</li>
 <li>Donec sit amet nisl. Aliquam semper ipsum sit amet velit.
-    Suspendisse id sem consectetuer libero luctus adipiscing.</li>
+Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
 <p>But if you want to be lazy, you don't have to:</p>
 <ul>
@@ -212,8 +219,8 @@ or one tab:</p>
 <ol>
 <li>
 <p>This is a list item with two paragraphs. Lorem ipsum dolor
-    sit amet, consectetuer adipiscing elit. Aliquam hendrerit
-    mi posuere lectus.</p>
+sit amet, consectetuer adipiscing elit. Aliquam hendrerit
+mi posuere lectus.</p>
 <p>Vestibulum enim wisi, viverra nec, fringilla in, laoreet
 vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
 sit amet velit.</p>
@@ -250,7 +257,9 @@ inside a list item.</p>
 <p>To put a code block within a list item, the code block needs
 to be indented <em>twice</em> -- 8 spaces or two tabs:</p>
 <ul>
-<li>A list item with a code block:<pre><code>&lt;code goes here&gt;
+<li>
+<p>A list item with a code block:</p>
+<pre><code>&lt;code goes here&gt;
 </code></pre>
 </li>
 </ul>
@@ -265,7 +274,7 @@ block by at least 4 spaces or 1 tab.</p>
 <pre><code>This is a code block.
 </code></pre>
 <p>Here is an example of AppleScript:</p>
-<pre><code>tell application "Foo"
+<pre><code>tell application &quot;Foo&quot;
     beep
 end tell
 </code></pre>
@@ -276,16 +285,17 @@ are automatically converted into HTML entities. This makes it very
 easy to include example HTML source code using Markdown -- just paste
 it and indent it, and Markdown will handle the hassle of encoding the
 ampersands and angle brackets. For example, this:</p>
-<pre><code>&lt;div class="footer"&gt;
+<pre><code>&lt;div class=&quot;footer&quot;&gt;
     &amp;copy; 2004 Foo Corporation
 &lt;/div&gt;
 </code></pre>
 <p>Regular Markdown syntax is not processed within code blocks. E.g.,
 asterisks are just literal asterisks within a code block. This means
 it's also easy to use Markdown to write about Markdown's own syntax.</p>
-<p><code>tell application "Foo"
+<pre><code>tell application &quot;Foo&quot;
     beep
-end tell</code></p>
+end tell
+</code></pre>
 <h2>Span Elements</h2>
 <h3>Links</h3>
 <p>Markdown supports two style of links: <em>inline</em> and <em>reference</em>.</p>
@@ -311,27 +321,31 @@ Unlike a pre-formatted code block, a code span indicates code within a
 normal paragraph. For example:</p>
 <p>Use the <code>printf()</code> function.</p>
 <h1>source:</h1>
-<p><a href="https://github.com/mxstbr/markdown-test-file/">https://github.com/mxstbr/markdown-test-file/</a></p><h3>Backlinks</h3>
-<p><a href="../index.html">index</a> : </p>
-<blockquote>
-<ul>
-<li>[[a page]] - internal links are made by brackets</li>
-</ul>
-</blockquote>
+<p><a href="https://github.com/mxstbr/markdown-test-file/">https://github.com/mxstbr/markdown-test-file/</a></p>
+
 
     <p></p>
+
+    
+      <h2>Topics:</h2>
+      <p><a href="../examples/">examples</a></p>
+
+    
+    
+    
     <div class="footer">
         <table>
       <tbody>
         <tr>
-          <td align="left">Page updated: 2020-9-8</td>
-          <td align="right">Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
-        <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
+          <td align="left"><small>Page updated: 2020-9-8</small></td>
+          <td align="right"><small>Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
+        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
             
           </td>
         </tr>
       </tbody>
     </table>
+
 
 
     </div>
