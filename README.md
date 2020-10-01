@@ -29,4 +29,4 @@ This will create a html site in */docs*. Changes can be made in the template.htm
 
 ## Credits
 - [https://github.com/theacodes/blog.thea.codes/](https://github.com/theacodes/blog.thea.codes/) - static site tutorial and much better code than mine.
-- [https://github.com/oxalorg/sakura](https://github.com/oxalorg/sakura) - drop-in css
+- [https://github.com/edwardtufte/tufte-css](https://github.com/edwardtufte/tufte-css) - drop-in css
