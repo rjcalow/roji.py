@@ -3,11 +3,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./scripts/tufte.css" />
-    {#
-    <script src="{{page.script}}"></script>
-    #}
-    <title>{{page.title}}</title>
+    <link rel="stylesheet" href="../../scripts/tufte.css" />
+    
+    <title>garden</title>
     <meta name="description" content="Digital garden of photography notes." />
     <meta
       name="keywords"
@@ -15,7 +13,6 @@
     />
     <meta name="author" content="R J Calow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link
       href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap"
       rel="stylesheet"
@@ -36,38 +33,30 @@
         font-family: "IM Fell English SC", serif;
       }
       .footer {
-        position: relative;
+        position: absolute;
         bottom: 0;
-        
       }
     </style>
   </head>
 
   <body>
-    <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
-    <p></p>
-    {{content}}
-    <h2>Topics</h2>
-    {{page.topics}}
-    <h2>Digital Garden?</h2>
-    <p>
-      Rather than a blog -a restrictive stream of self promotion and negative
-      connotations spearheaded by <em>influencers</em>, a digital garden is a
-      place to grow ideas. For a better explanation see
-      <a href="https://maggieappleton.com/garden-history"
-        >maggieappleton.com/garden-history</a
-      >.
-    </p>
+    <h1><a href="../../">Roji.py digital garden</a></h1>
 
     <p></p>
+    <h1>garden</h1>
+
+    <p><a href="../../change-log/">change log</a> <small>30/9/2020</small></br>
+<a href="../../gardens/">gardens</a> <small>8/9/2020</small></br>
+<a href="../../image-example/">image example</a> <small>8/9/2020</small></br>
+<a href="../../roji-garden/">roji garden</a> <small>8/9/2020</small></br></p>
+
 
     <div class="footer">
-      <small>Site generated on: {{page.date}}</small>
-      
+      <small>Generated on ~ 30/09/2020</small>
+
         Made with
         <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-      
     </div>
   </body>
 </html>

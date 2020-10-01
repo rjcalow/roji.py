@@ -3,43 +3,40 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <script src="{{page.script}}"></script>
+    <link rel="stylesheet" href="../scripts/tufte.css">
+    {# <script src="{{page.script}}"></script> #}
     <title>{{page.title}}</title>
     <meta name="description" content="Digital garden of photography notes.">
     <meta name="keywords" content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape">
     <meta name="author" content="R J Calow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <style>
-      table,
-      th,
-      td {
-        vertical-align: text-bottom;
-      }
-      .footer {
-        padding-top: 20px;
-      }
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+      <style>
+        h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6
+        {
+          font-family: 'IM Fell English SC', serif;
+        }
+        .footer {
+        position: relative;
+        bottom: 0;
+        
+        }
     </style>
+
   </head>
 
   <body>
-  
-    <table>
-      <tbody>
-        <tr>
-          <td align="left"><a href="{{page.index_url}}"><h4>{{page.site_name}}</a></h4></td>
-          <td align="right">
-            
-              <a onclick="toggleTheme()" href="javascript:void(0);">&#x1F317</a>
-            
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p></p>
-    {{content}}
+    <div class="page">
+    <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
 
     <p></p>
+    <h1>{{page.title}}</h1>
+    
+    
+    {{content}}
+
+  
+    <p>Written, {{page.date}}</p>
 
     {% if page.topic is defined %}
       <h2>Topics:</h2>
@@ -49,19 +46,14 @@
     {% endif %}
     
     {{page.backlinks}}
+    </div>
     <div class="footer">
-        <table>
-      <tbody>
-        <tr>
-          <td align="left"><small>Page updated: {{page.date}}</small></td>
-          <td align="right"><small>Made with <a href="https://oxal.org/projects/sakura/">Sakura.css</a> +
+           
+        Made with
+        <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-            
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
+      
+    </div>
 
 
     </div>

@@ -1,11 +1,22 @@
 ---
 title: "change log"
-date: 2020-9-8
+date: 30/9/2020
 topic: garden, roji, changes
 
 ---
 
 ## Change log
+
+### 30/9/2020
+
+I dropped sakura.css for [tufte-css](https://github.com/edwardtufte/tufte-css). Reason, purely simple: I like it for my personal website. In the future it would be neat to select, or make it easier to choose, a classless css. 
+
+Paths/Addresses are all in lower now to avoid problems on my host. 
+
+Topics can be linked with brackets &#123;  &#125;
+
+I could do with a function to deal with different date types. At the moment the script needs d/m/yyyy. 
+
 
 ### 23/9/2020
 

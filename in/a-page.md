@@ -1,10 +1,9 @@
 ---
 title: "Markdown example"
-date: 2020-9-8
+date: 8/9/2020
 topic: examples
 ---
 
-# Markdown: Syntax
 
 *   [Overview](#overview)
     *   [Philosophy](#philosophy)

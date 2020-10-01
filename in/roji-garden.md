@@ -1,9 +1,9 @@
 ---
 title: "roji"
-date: 2020-9-8
+date: 8/9/2020
 topic: garden, roji
 ---
-# Roji
+
 A simple transitional Japanese garden.
 
 * [A wiki entry for Roji](https://en.wikipedia.org/wiki/Roji).
