@@ -1,8 +1,8 @@
-# Roji.py 0.2 WIP digital garden generator
+# Roji.py 0.3 WIP digital garden generator
 # Used these as basis for the generator backends:
 # https://blog.thea.codes/a-small-static-site-generator/
 # https://github.com/theacodes/blog.thea.codes/
-# 23/9/2020
+# 30/9/2020
 # encoding: utf8
 import frontmatter
 import cmarkgfm
@@ -17,7 +17,8 @@ jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader('templates'),
 )
 
-site_name = "Digital garden 🌾"
+site_name = "Roji.py digital garden"
+
 date = datetime.today().strftime('%d/%m/%Y')
 
 
@@ -39,16 +40,19 @@ def parse(source):
 
 def write_page(page, content):
     # Paths:
-    p = pathlib.Path("./docs/{}/".format(page['name'].replace(" ", "-")))
+    p = pathlib.Path("./docs/{}/".format(page['name'].replace(" ", "-").lower()))
     path = pathlib.Path(
-        "./docs/{}/index.html".format(page['name'].replace(" ", "-")))
+        "./docs/{}/index.html".format(page['name'].replace(" ", "-").lower()))
     # Make folder if it does not exist:
     if p.exists() == False:
         p.mkdir(parents=False, exist_ok=True)
+
+    
     # Jinja and pathlib write:
     template = jinja_env.get_template('page.html')
     rendered = template.render(page=page, content=content)
     path.write_text(rendered, encoding='utf8')
+    
 
 
 def write_index(topics):
@@ -75,12 +79,12 @@ def wikilinkify(m, file):
     # dependencies down.
     
     # Using re to find links into list
-    linkname = (re.findall(r'\[\[(.*?)\]\]', m))
+    links = (re.findall(r'\[\[(.*?)\]\]', m))
     # remove duplicates
-    linkname = list(dict.fromkeys(linkname))
+    links = list(dict.fromkeys(links))
 
     # Sort list
-    for link in linkname:
+    for link in links:
         link = ''.join(link)
         old = "[[" + link + "]]"
         if "index" in file:
@@ -90,13 +94,31 @@ def wikilinkify(m, file):
 
         x = m.count(link)
         m = m.replace(old, linkurl, x)
+
+    ## {topic} links 
+    links = (re.findall(r'{(.*?)}', m))
+    # remove duplicates
+    links = list(dict.fromkeys(links))
+    for link in links:
+        old = "{" + link + "}"
+        if "index" in file:
+            linkurl = "[" + md_linkify(link, "./topics/", "/") + "]"
+        else:
+            linkurl = "[" + md_linkify(link, "../topics/", "/") + "]"
+
+        x = m.count(link)
+        m = m.replace(old, linkurl, x)
+
+
     return m
+
 
 def cloudify_topics(topics):
     #for index page display
     string = ""
+    topics.sort(reverse=False)
     for topic in topics:
-        string += md_linkify(topic, "./", "/") + ", "
+        string += md_linkify(topic, "./topics/", "/") + ", "
 
     return htmlify(string)
 
@@ -107,9 +129,9 @@ def prettify_topics(topics):
     if "," in topics:
         strings = str(topics).split(",")
         for string in strings:
-             text += md_linkify(string, "../", "/") + ", "  
+             text += md_linkify(string.lstrip().rstrip(), "../topics/", "/") + ", "  
     else:
-        text = md_linkify(topics, "../", "/")
+        text = md_linkify(topics, "../topics/", "/")
     
     return htmlify(text) 
 
@@ -134,31 +156,42 @@ def get_topics(pages):
 
 
 def write_topic_pages(topics, pages):
-
-    pages = sorted(pages, key=lambda page: page['date'], reverse=True)
+    #pages_by_date = sorted(pages, key=lambda page: page['date'], reverse=False)
+    # Using datetime strptime instead of above
+    pages_by_date = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
 
     for topic in topics:
-        content = "## " + topic.replace("-", " ").title() + " \n"
-        for page in pages:
-            if 'topic' in page and topic in page['topic']:
-                content = content + md_linkify(page['name'].replace(
-                    "-", " "), '../', '/') + " <small>" + page['date'] + "</small> </br>"
+        #content = "## " + topic.replace("-", " ").title() + " \n"
+        content = ""
+        for page in pages_by_date:
+            if 'topic' in page:
+
+                if "," in page['topic']:
+                    strings = str(page['topic']).split(",")
+                    for string in strings:
+                        if string.lower().lstrip().rstrip()  == topic.lower().lstrip().rstrip() :
+                            content = content + md_linkify(page['name'].replace("-", " "), '../../', '/') + " <small>" + page['date'] + "</small></br> \n"
+                            break
+
+
+                if topic.lower() == page['topic'].lower(): content = content + md_linkify(page['name'].replace("-", " "), '../../', '/') + " <small>" + page['date'] + "</small></br> \n"
+
 
         content = htmlify(content)
         page = {
             'content': content,
             'site_name': site_name,
             'script': "../scripts/sakura.js",
-            'index_url': "../",
+            'index_url': "../../",
             'title': topic,
             'date': date
 
         }
-        p = pathlib.Path("./docs/{}/".format(topic.replace(" ", "-")))
+        p = pathlib.Path("./docs/topics/{}/".format(topic.replace(" ", "-").lower()))
         path = pathlib.Path(
-            "./docs/{}/index.html".format(topic.replace(" ", "-")))
+            "./docs/topics/{}/index.html".format(topic.replace(" ", "-").lower()))
         if p.exists() == False:
-            p.mkdir(parents=False, exist_ok=True)
+            p.mkdir(parents=True, exist_ok=True)
         
         # the following finds if a page with the topic name already exists
         # prefering to use the page
@@ -168,19 +201,22 @@ def write_topic_pages(topics, pages):
                 already_a_page = True
         
         if already_a_page == False:        
-            template = jinja_env.get_template('page.html')
+            template = jinja_env.get_template('topic.html')
             rendered = template.render(page=page, content=content)
             path.write_text(rendered, encoding='utf8')
 
 
 def find_refences(name):
     found = []
+    
     for f in files():
         text = f.read_text(encoding='utf8')
         lines = text.splitlines()
         temp=[]
         for line in lines:
-            x = line.count("[[" + name.replace("-", " ") + "]]")
+            # need to use re or str.lower() for case
+            #line = line.lower()
+            x = line.lower().count("[[" + name.replace("-", " ").lower() + "]]")
             if x >= 1:
                 temp=[f.stem, line]
                 found.append(temp)
@@ -190,6 +226,7 @@ def find_refences(name):
 
 def backlinks(name):    
     list_ = find_refences(name)
+    
     if len(list_) == 0:
         return ""
     string = "### Backlinks \n"
@@ -199,16 +236,15 @@ def backlinks(name):
     return string
 
 
-
 def md_linkify(text, base, end):
-    text = "["+text.replace("-", " " )+"](" + base + text.replace(" ", "-") + end + ")"
+    text = "["+text.replace("-", " " )+"](" + base + text.replace(" ", "-").lower() + end + ")"
     return text
 
 def housekeeping():
     #extras go here
 
     ##copy images
-    imgs = pathlib.Path('.').glob('imgs/*.jpg')
+    imgs = pathlib.Path('.').glob('imgs/*')
     p = pathlib.Path('./docs/imgs/')
 
     if p.exists() == False:
@@ -241,8 +277,7 @@ def main():
         content = wikilinkify(page.content, str(source))
         content = htmlify(content)
         page['site_name'] = site_name
-        page['index_url'] = "../"
-        page['script'] = '../scripts/sakura.js'
+        page['index_url'] = "../"    
         page['name'] = source.stem
         page['backlinks'] = backlinks(source.stem)
         # keep topics (pretty html) and topic (yaml data) serpate

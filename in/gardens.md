@@ -1,10 +1,8 @@
 ---
 title: "Gardens"
-date: 2020-9-8
+date: 8/9/2020
 topic: gardening,garden
 ---
-# Gardens
-
 ## Types of garden
 - [[roji garden]] 🌱 
 - [Kenroku-en](https://en.wikipedia.org/wiki/Kenroku-en)
