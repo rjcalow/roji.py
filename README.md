@@ -26,6 +26,7 @@ This will create a html site in */docs*. Changes can be made in the template.htm
 ## Things to do 🍃
 
 - Streamline topics
+- Add a better system for dates
 
 ## Credits
 - [https://github.com/theacodes/blog.thea.codes/](https://github.com/theacodes/blog.thea.codes/) - static site tutorial and much better code than mine.
