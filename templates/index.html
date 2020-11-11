@@ -3,10 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./scripts/tufte.css" />
-    {#
-    <script src="{{page.script}}"></script>
-    #}
+    <link rel="stylesheet" href="./assets/tufte.css" />
     <title>{{page.title}}</title>
     <meta name="description" content="Digital garden of photography notes." />
     <meta
@@ -44,12 +41,18 @@
   </head>
 
   <body>
+  <article>
     <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
     <p></p>
+    <section>
     {{content}}
+    </<section>
     <h2>Topics</h2>
+    <section>
     {{page.topics}}
+    </section>
     <h2>Digital Garden?</h2>
+    <section>
     <p>
       Rather than a blog -a restrictive stream of self promotion and negative
       connotations spearheaded by <em>influencers</em>, a digital garden is a
@@ -58,16 +61,19 @@
         >maggieappleton.com/garden-history</a
       >.
     </p>
-
+    </section>
     <p></p>
+    
 
-    <div class="footer">
-      <small>Site generated on: {{page.date}}</small>
+    <blockquote>
+    <footer>
+      <small>Pages generated on: {{page.date}}.</small>
       
         Made with
         <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-      
+     </footer></blockquote> 
     </div>
+    </article>
   </body>
 </html>

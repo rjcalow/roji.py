@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../scripts/tufte.css" />
+    <link rel="stylesheet" href="../../assets/tufte.css" />
     {#
     <script src="{{page.script}}"></script>
     #}
@@ -35,26 +35,29 @@
         font-family: "IM Fell English SC", serif;
       }
       .footer {
-        position: absolute;
+        position: relative;
         bottom: 0;
       }
     </style>
   </head>
 
   <body>
+  <article>
     <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
 
     <p></p>
     <h1>{{page.title}}</h1>
 
     {{content}}
-
-    <div class="footer">
-      <small>Generated on ~ {{page.date}}</small>
-
+    <blockquote>
+    <footer>
+      <small>Pages generated on: {{page.date}}.</small>
+      
         Made with
         <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
+     </footer></blockquote> 
     </div>
+    </article>
   </body>
 </html>

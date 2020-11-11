@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../scripts/tufte.css">
+    <link rel="stylesheet" href="../assets/tufte.css">
     {# <script src="{{page.script}}"></script> #}
     <title>{{page.title}}</title>
     <meta name="description" content="Digital garden of photography notes.">
@@ -26,7 +26,8 @@
   </head>
 
   <body>
-    <div class="page">
+  <article>
+    
     <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
 
     <p></p>
@@ -46,16 +47,17 @@
     {% endif %}
     
     {{page.backlinks}}
-    </div>
-    <div class="footer">
-           
+    
+
+    <blockquote>
+    <footer>
+      <small>Pages generated on: {{page.date}}.</small>
+      
         Made with
         <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
         <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-      
+     </footer></blockquote> 
     </div>
-
-
-    </div>
+    </article>
   </body>
 </html>

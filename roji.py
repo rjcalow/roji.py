@@ -1,8 +1,8 @@
-# Roji.py 0.3 WIP digital garden generator
+# Roji.py 0.4 WIP digital garden generator
 # Used these as basis for the generator backends:
 # https://blog.thea.codes/a-small-static-site-generator/
 # https://github.com/theacodes/blog.thea.codes/
-# 30/9/2020
+# 11/11/2020
 # encoding: utf8
 import frontmatter
 import cmarkgfm
@@ -19,6 +19,7 @@ jinja_env = jinja2.Environment(
 
 site_name = "Roji.py digital garden"
 
+# UK date
 date = datetime.today().strftime('%d/%m/%Y')
 
 
@@ -257,8 +258,8 @@ def housekeeping():
                     str(path))
 
     ## copy scripts
-    scripts = pathlib.Path('.').glob('scripts/*')
-    p = pathlib.Path('./docs/scripts/')
+    scripts = pathlib.Path('.').glob('assets/*')
+    p = pathlib.Path('./docs/assets/')
 
     if p.exists() == False:
             p.mkdir(parents=False, exist_ok=True)
