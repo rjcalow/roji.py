@@ -11,15 +11,22 @@ import jinja2
 import shutil
 import re
 import os
+import yaml
 from datetime import datetime
 
+file = open('config.yml', 'r')
+config = yaml.load(file, Loader=yaml.FullLoader)
+
+
 jinja_env = jinja2.Environment(
-    loader=jinja2.FileSystemLoader('templates'),
+    loader=jinja2.FileSystemLoader(config['templates']),
 )
 
-site_name = "Roji.py digital garden"
+site_name = config['site_name']
+author = config['author']
+out_folder = pathlib.Path (config['out_folder'])
 
-# UK date
+#uk date
 date = datetime.today().strftime('%d/%m/%Y')
 
 
@@ -30,7 +37,8 @@ def htmlify(content):
 
 
 def files():
-    return pathlib.Path('.').glob('in/*.md')
+    p = pathlib.Path(config["markdown_folder"])
+    return p.glob('*.md')
 
 
 def parse(source):
@@ -41,9 +49,9 @@ def parse(source):
 
 def write_page(page, content):
     # Paths:
-    p = pathlib.Path("./docs/{}/".format(page['name'].replace(" ", "-").lower()))
-    path = pathlib.Path(
-        "./docs/{}/index.html".format(page['name'].replace(" ", "-").lower()))
+    p = out_folder.joinpath("{}".format(page['name'].replace(" ", "-").lower()))
+    path = p.joinpath("index.html".format(page['name'].replace(" ", "-").lower()))
+
     # Make folder if it does not exist:
     if p.exists() == False:
         p.mkdir(parents=False, exist_ok=True)
@@ -54,18 +62,42 @@ def write_page(page, content):
     rendered = template.render(page=page, content=content)
     path.write_text(rendered, encoding='utf8')
     
+# adds extras for tufte.css    
+def tuftify(content):
+    count = 1
+    imgs = re.findall(r'<img(.*?)>' ,content)
 
+    for img in imgs:
+        img = str(img)
+        
+        try:
+            alt = re.search(r'alt=".(.*?)"', img).group(0)
+            alt_text = re.search(r'".(.*?)"', alt).group(0)
+            alt_text = alt_text.replace('"', "")
+            if alt_text != None:
+                # the following is messy BUT readable
+                newline = '<figure>'
+                newline += ' '
+                newline += "\n <img" + str(img) + '>'
+                newline += '<label for="' + alt_text.replace(" ", "-")[0:4] + str(count) + '" class="margin-toggle">' + str(count)+'</label><input type="checkbox" id="' + alt_text.replace(" ", "-")[0:4] + str(count) + '" class="margin-toggle">'
+                newline += '\n<span class="marginnote">' + str(alt_text) + '</span>'
+                newline += "</figure>"
+                content = content.replace("<img" + str(img)+">", newline)
+                count += 1
+        except:
+            pass
+    return content 
 
-def write_index(topics):
+def write_index(topics, new):
     # Paths:
     page = parse("index.md")
-    path = pathlib.Path("./docs/index.html")
+    path = out_folder.joinpath("index.html")
     # Extras:
     page['site_name'] = site_name
     page['index_url'] = "../"
-    page['script'] = './scripts/sakura.js'
+    #page['script'] = './scripts/sakura.js'
     page['date'] = date
-
+    page['new'] = new
     page['topics'] = cloudify_topics(topics)
     content = wikilinkify(page.content, path.stem)
     # Render:
@@ -160,7 +192,9 @@ def write_topic_pages(topics, pages):
     #pages_by_date = sorted(pages, key=lambda page: page['date'], reverse=False)
     # Using datetime strptime instead of above
     pages_by_date = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
-
+    
+    topic_folder = out_folder.joinpath("topics")
+    
     for topic in topics:
         #content = "## " + topic.replace("-", " ").title() + " \n"
         content = ""
@@ -188,9 +222,11 @@ def write_topic_pages(topics, pages):
             'date': date
 
         }
-        p = pathlib.Path("./docs/topics/{}/".format(topic.replace(" ", "-").lower()))
-        path = pathlib.Path(
-            "./docs/topics/{}/index.html".format(topic.replace(" ", "-").lower()))
+
+        topicpath = str(topic.replace(" ", "-").lower())
+        p = topic_folder.joinpath(topicpath)
+        path = p.joinpath("index.html" )
+        
         if p.exists() == False:
             p.mkdir(parents=True, exist_ok=True)
         
@@ -241,57 +277,79 @@ def md_linkify(text, base, end):
     text = "["+text.replace("-", " " )+"](" + base + text.replace(" ", "-").lower() + end + ")"
     return text
 
+
+def new_articles(pages):
+    pages_by_date = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
+
+    new = ""
+
+    for page in pages_by_date[0:5]:
+        new += " - " + md_linkify(page['name'], "./", "/") + " *" + page['date'] + "* \n"
+
+    return htmlify(new)
+
+
 def housekeeping():
     #extras go here
-
     ##copy images
-    imgs = pathlib.Path('.').glob('imgs/*')
-    p = pathlib.Path('./docs/imgs/')
+    imgs_in = pathlib.Path(config['img_folder'])
+    imgs_out = out_folder.joinpath(imgs_in.name)
+    print (imgs_out)
+    imgs = imgs_in.glob('*')
+    
 
-    if p.exists() == False:
-            p.mkdir(parents=False, exist_ok=True)
+    #if imgs outfolder doesnt exist make it
+    if imgs_out.exists() == False:
+            imgs_out.mkdir(parents=False, exist_ok=True)
 
     for i in imgs:
-        path = pathlib.Path(
-            "./docs/{}".format(i))
-        shutil.copy(str(i),
-                    str(path))
+        path = imgs_out.joinpath(i.name)
+        print (path)
+        shutil.copy(str(i), str(path))
 
-    ## copy scripts
-    scripts = pathlib.Path('.').glob('assets/*')
-    p = pathlib.Path('./docs/assets/')
+    assets_folder = pathlib.Path("assets")
+    assets_folder_out = out_folder.joinpath("assets")
 
-    if p.exists() == False:
-            p.mkdir(parents=False, exist_ok=True)
+    if assets_folder_out.exists() == False:
+        assets_folder_out.mkdir(parents=False, exist_ok=True)
 
-    for i in scripts:
-        path = pathlib.Path(
-            "./docs/{}".format(i))
-        shutil.copy(str(i),
-                    str(path))
+    assets_ = assets_folder.glob('*')
+    for a in assets_:
+        path = assets_folder_out.joinpath(a.name)
+        
+        shutil.copy(str(a), str(path))
+
 def main():
+    count = 0
     pages = []
     sources = files()
-
+    
     for source in sources:
         page = parse(source)
+        
         content = wikilinkify(page.content, str(source))
+        
         content = htmlify(content)
-        page['site_name'] = site_name
+        content = tuftify(content)
+        page['author'] = config['author']
+        page['site_name'] = config['site_name']
         page['index_url'] = "../"    
         page['name'] = source.stem
         page['backlinks'] = backlinks(source.stem)
-        # keep topics (pretty html) and topic (yaml data) serpate
+        # keep topics (pretty html) and topic (yaml data) apart
         if "topic" in page: page['topics'] = prettify_topics(str(page['topic']))
         write_page(page, content)
 
         pages.append(page)
+        count += 1
 
     topics = get_topics(pages)
     write_topic_pages(topics, pages)
-    write_index(topics)
+    new = new_articles(pages)
+    write_index(topics, new)
     housekeeping()
 
+    print("Processed " + str(count) + " files to " + str(out_folder))
 
 if __name__ == "__main__":
     main()

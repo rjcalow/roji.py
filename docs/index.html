@@ -13,6 +13,15 @@
     <meta name="author" content="R J Calow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+<link rel="manifest" href="./assets/site.webmanifest">
+<link rel="shortcut icon" href="./assets/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="./assets/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
     <link
       href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap"
       rel="stylesheet"
@@ -42,7 +51,7 @@
 
   <body>
   <article>
-    <h1><a href="../">Roji.py digital garden</a></h1>
+    <h1><a href="../">Digital Garden</a></h1>
     <p></p>
     <section>
     <h2>Roji.py</h2>
@@ -53,67 +62,33 @@
 <p>Topics are listed with the YAML of the markdown files, each topic has its own page, and can be linked to with {topic}.</p>
 <h2>Why?</h2>
 <p>Most static site generators concentrate on the blog format. Frustrated, I made my own, inspired by this <a href="https://medium.com/swlh/a-static-site-generator-in-python-part-2-d7071da25904">article</a>, so that I could transform academic and personal notes into a simple website.</p>
-<h2>some example pages</h2>
-<ul>
-<li>[<a href="a-page/">a page</a>] - internal links are made by brackets</li>
-<li>[<a href="gardens/">gardens</a>]</li>
-<li>[<a href="image-example/">image example</a>]</li>
-</ul>
-<h2>Change log</h2>
-<h3>11/11/2020</h3>
-<p>Improved layouts to match tufte.css better.</p>
-<h4>Changes</h4>
-<ul>
-<li>Article tag now embeded in pages.</li>
-<li>Footer class now also used.</li>
-</ul>
-<h3>30/9/2020</h3>
-<p>I dropped sakura.css for <a href="https://github.com/edwardtufte/tufte-css">tufte-css</a>. Reason, purely simple: I like it for my personal website. In the future it would be neat to select, or make it easier to choose, a classless css.</p>
-<p>Paths/Addresses are all in lower now to avoid problems on my host.</p>
-<p>Topics can be linked with brackets {  }</p>
-<p>I could do with a function to deal with different date types. At the moment the script needs d/m/yyyy.</p>
-<h3>23/9/2020</h3>
-<p>Constantly playing with ideas, toying with code, the project got a little out of hand. I stumbled on this amazing clean code and became inspired.</p>
-<ul>
-<li><a href="https://blog.thea.codes/a-small-static-site-generator/">https://blog.thea.codes/a-small-static-site-generator/</a></li>
-<li><a href="https://github.com/theacodes/blog.thea.codes/">https://github.com/theacodes/blog.thea.codes/</a></li>
-</ul>
-<h4>Changes:</h4>
-<ul>
-<li>Using the fast cmarkgfm package for markdown.</li>
-<li>Rewrote everything.</li>
-<li>Started using pathlib like I should have done in the first place.</li>
-<li>Added a tag system in the form of topics. This still needs to be streamlinned.</li>
-<li>Neatened the Jinja2 rendering.</li>
-<li>Decided against a directory. It didn't fit the digital garden ethos.</li>
-</ul>
-<h4>Thinking about:</h4>
-<ul>
-<li>I have spent too much time on this, but have learnt a lot.</li>
-<li>Drop in classless css framworks ( <a href="https://github.com/dohliam/dropin-minimal-css">https://github.com/dohliam/dropin-minimal-css</a> ) are great.</li>
-<li>I need to build my notes up rather than constantly playing with this.</li>
-</ul>
-<h3>13/9/2020</h3>
-<p>Changed backend from YAML and pystache to frontend and jinja2 modules. This made processing faster and gives better options. There is now a index and page template, and I'm trying to build a simple menu or categories but I'm stumped on how to organize the posts data by a topic adopted from yaml.</p>
-<p>There are also changes to layout/template, keeping it even more simple by removing extra css and using pure html tables for header.</p>
-<h4>Some influences:</h4>
-<ul>
-<li>
-<p><a href="https://dev.to/nqcm/making-a-static-site-generator-with-python-part-2-4al">Making a Static Site Generator with Python </a></p>
-</li>
-<li>
-<p><a href="https://youtu.be/Ph7oJDR71Jc">Building a Simple Static Site Generator in Python</a></p>
-</li>
-</ul>
 
     </<section>
-    <h2>Topics</h2>
-    <section>
-    <p><a href="./topics/changes/">changes</a>, <a href="./topics/examples/">examples</a>, <a href="./topics/garden/">garden</a>, <a href="./topics/gardening/">gardening</a>, <a href="./topics/roji/">roji</a>,</p>
+
+
+  <section>
+    <h2>Seeds</h2>
+    
+    <p><a href="./topics/changes/">changes</a>, <a href="./topics/code/">code</a>, <a href="./topics/examples/">examples</a>, <a href="./topics/garden/">garden</a>, <a href="./topics/gardening/">gardening</a>, <a href="./topics/pathlib/">pathlib</a>, <a href="./topics/roji/">roji</a>,</p>
 
     </section>
-    <h2>Digital Garden?</h2>
+
     <section>
+    <h2>Newest propagations</h2>
+    
+    <ul>
+<li><a href="./tufte.css/">Tufte.css</a> <em>11/11/2020</em></li>
+<li><a href="./cmarkgfm/">cmarkgfm</a> <em>23/9/2020</em></li>
+<li><a href="./drop-in-css/">Drop in css</a> <em>23/9/2020</em></li>
+<li><a href="./thinking/">thinking</a> <em>13/9/2020</em></li>
+<li><a href="./a-page/">a page</a> <em>8/9/2020</em></li>
+</ul>
+
+    </section>
+    
+    <section>
+    <h2>Digital Garden?</h2>
+    
     <p>
       Rather than a blog -a restrictive stream of self promotion and negative
       connotations spearheaded by <em>influencers</em>, a digital garden is a
@@ -124,11 +99,11 @@
     </p>
     </section>
     <p></p>
-    
+  
 
     <blockquote>
     <footer>
-      <small>Pages generated on: 11/11/2020.</small>
+      <small>Pages generated on: 13/11/2020.</small>
       
         Made with
         <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +

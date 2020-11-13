@@ -1,0 +1,11 @@
+author: Gardener
+site_name: Digital Garden
+# folder of templates for jinja
+templates: templates
+# where are your markdown files stored
+markdown_folder: in
+# image folder
+img_folder: imgs
+#where do you want your html files
+out_folder: docs
+
