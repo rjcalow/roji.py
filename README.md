@@ -24,9 +24,13 @@ python3 roji.py
 This will create a html site in */docs*. Changes can be made in the template.html and roji.py itself. 
 
 ## Things to do 🍃
+Short term
+- Nest section tags under headings for tufte.css
 
+Long term
 - Streamline topics
 - Add a better system for dates
+- Image resizer
 
 ## Credits
 - [https://github.com/theacodes/blog.thea.codes/](https://github.com/theacodes/blog.thea.codes/) - static site tutorial and much better code than mine.

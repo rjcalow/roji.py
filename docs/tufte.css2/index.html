@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../assets/tufte.css">
+    
+    <title>Tufte.css 2</title>
+    <meta name="description" content="Digital garden of photography notes.">
+    <meta name="keywords" content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape">
+    <meta name="author" content="R J Calow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+      <style>
+        h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6
+        {
+          font-family: 'IM Fell English SC', serif;
+        }
+        .footer {
+        position: relative;
+        bottom: 0;
+        
+        }
+    </style>
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="shortcut icon" href="../assets/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="../assets/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body>
+  <article>
+    
+    <small><a href="../">back</a></small>
+
+    <h1>Tufte.css 2</h1>
+    <p class="subtitle"><small>14/11/2020</small></p>
+    
+    <p>I have been looking at parsers with plugins and options for blocks to use tufte.css section tag. My markdown files do not have inbuilt tags and nor do I want to go through each one adding tags. So I need a python solution to add section tags under headings and close at the next heading.  This is probably a different project altogether as it's about tufte.css than the digital garden.</p>
+<p>I have already wrote some basic code to move alt text to the margins</p>
+<pre><code>    count = 1
+    imgs = re.findall(r'&lt;img(.*?)&gt;' ,content)
+
+    for img in imgs:
+        img = str(img)
+        
+        try:
+            alt = re.search(r'alt=&quot;.(.*?)&quot;', img).group(0)
+            alt_text = re.search(r'&quot;.(.*?)&quot;', alt).group(0)
+            alt_text = alt_text.replace('&quot;', &quot;&quot;)
+            if alt_text != None:
+                # the following is messy BUT readable
+                newline = '&lt;figure&gt;'
+                newline += ' '
+                newline += &quot;\n &lt;img&quot; + str(img) + '&gt;'
+                newline += '&lt;label for=&quot;' + alt_text.replace(&quot; &quot;, &quot;-&quot;)[0:4] + str(count) + '&quot; class=&quot;margin-toggle&quot;&gt;' + str(count)+'&lt;/label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;' + alt_text.replace(&quot; &quot;, &quot;-&quot;)[0:4] + str(count) + '&quot; class=&quot;margin-toggle&quot;&gt;'
+                newline += '\n&lt;span class=&quot;marginnote&quot;&gt;' + str(alt_text) + '&lt;/span&gt;'
+                newline += &quot;&lt;/figure&gt;&quot;
+                content = content.replace(&quot;&lt;img&quot; + str(img)+&quot;&gt;&quot;, newline)
+                count += 1
+        except:
+            pass
+</code></pre>
+
+
+  
+    
+
+    
+      <h2>Topics:</h2>
+      <p><a href="../topics/changes/">changes</a></p>
+
+    
+    
+    
+    
+
+    <blockquote>
+    <footer>
+    <small>Text and images, unless stated, copyright Gardener</small></br>
+      <small>Pages generated on: 14/11/2020.</small>
+      
+        Made with
+        <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
+        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
+     </footer></blockquote> 
+    </div>
+    </article>
+  </body>
+</html>

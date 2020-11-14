@@ -1,8 +1,8 @@
-# Roji.py 0.4 WIP digital garden generator
-# Used these as basis for the generator backends:
+# Roji.py 0.4.5 WIP digital garden generator
+# Used these as a starting point / basis for the generator backends:
 # https://blog.thea.codes/a-small-static-site-generator/
 # https://github.com/theacodes/blog.thea.codes/
-# 11/11/2020
+# 14/11/2020
 # encoding: utf8
 import frontmatter
 import cmarkgfm
@@ -86,7 +86,15 @@ def tuftify(content):
                 count += 1
         except:
             pass
-    return content 
+
+    #trying to add sections for tufte.css
+    #and not succeeding
+    #content = re.sub(r'<p>','<section><p>',content)    
+    #content = re.sub(r'</p>','</p></section>',content)
+    
+    # content = re.sub(r'<\/h2>','</h2><section>',content) 
+    #content = re.sub(r'<h2>','</section><h2>',content)   
+    return content
 
 def write_index(topics, new):
     # Paths:
@@ -216,7 +224,6 @@ def write_topic_pages(topics, pages):
         page = {
             'content': content,
             'site_name': site_name,
-            'script': "../scripts/sakura.js",
             'index_url': "../../",
             'title': topic,
             'date': date
@@ -294,7 +301,7 @@ def housekeeping():
     ##copy images
     imgs_in = pathlib.Path(config['img_folder'])
     imgs_out = out_folder.joinpath(imgs_in.name)
-    print (imgs_out)
+    #print (imgs_out)
     imgs = imgs_in.glob('*')
     
 
@@ -304,7 +311,6 @@ def housekeeping():
 
     for i in imgs:
         path = imgs_out.joinpath(i.name)
-        print (path)
         shutil.copy(str(i), str(path))
 
     assets_folder = pathlib.Path("assets")

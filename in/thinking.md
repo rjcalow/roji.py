@@ -12,12 +12,6 @@ There are also changes to layout/template, keeping it even more simple by removi
 
 
 
-**## Some influences:**
-
-
-
-\* [Making a Static Site Generator with Python ](https://dev.to/nqcm/making-a-static-site-generator-with-python-part-2-4al)
-
-
-
-\* [Building a Simple Static Site Generator in Python](https://youtu.be/Ph7oJDR71Jc)al garden ethos. 
+## Some influences:
+- [Making a Static Site Generator with Python ](https://dev.to/nqcm/making-a-static-site-generator-with-python-part-2-4al)
+- [Building a Simple Static Site Generator in Python](https://youtu.be/Ph7oJDR71Jc)al garden ethos. 
