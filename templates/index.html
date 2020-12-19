@@ -3,7 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./assets/tufte.css" />
+    <link rel="stylesheet" href="{{page.style}}" />
+    <link rel="stylesheet" href="./assets/extra.css" />
     <title>{{page.title}}</title>
     <meta name="description" content="Digital garden of photography notes." />
     <meta
@@ -22,53 +23,25 @@
 <meta name="msapplication-config" content="./assets/browserconfig.xml">
 <meta name="theme-color" content="#ffffff">
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      .h1,
-      .h2,
-      .h3,
-      .h4,
-      .h5,
-      .h6 {
-        font-family: "IM Fell English SC", serif;
-      }
-      .footer {
-        position: relative;
-        bottom: 0;
-        
-      }
-    </style>
   </head>
 
   <body>
   <article>
-    <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
+    <h1>{{page.site_name}}</h1>
     
     {{content}}
     
 
-
+    <h2>Newest propagations</h2>
+    
+    {{page.new}}
  
     <h2>Seeds</h2>
     
     {{page.topics}}
   
 
-   
-    <h2>Newest propagations</h2>
-    
-    {{page.new}}
-   
-    
+      
   
     <h2>Digital Garden?</h2>
     

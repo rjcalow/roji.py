@@ -3,7 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../assets/tufte.css" />
+    <link rel="stylesheet" href="{{page.style}}" />
+    <link rel="stylesheet" href="../../assets/extra.css" />
     {#
     <script src="{{page.script}}"></script>
     #}
@@ -15,30 +16,7 @@
     />
     <meta name="author" content="R J Calow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      .h1,
-      .h2,
-      .h3,
-      .h4,
-      .h5,
-      .h6 {
-        font-family: "IM Fell English SC", serif;
-      }
-      .footer {
-        position: relative;
-        bottom: 0;
-      }
-    </style>
+
 <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
@@ -51,9 +29,9 @@
 
   <body>
   <article>
-    <h1><a href="{{page.index_url}}">{{page.site_name}}</a></h1>
+    <small><a href="{{page.index_url}}">back</a></small>
 
-    <p></p>
+ 
     <h1>{{page.title}}</h1>
 
     {{content}}

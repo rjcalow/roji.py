@@ -1,8 +1,8 @@
-# Roji.py 0.4.5 WIP digital garden generator
+# Roji.py 0.4.6 WIP digital garden generator
 # Used these as a starting point / basis for the generator backends:
 # https://blog.thea.codes/a-small-static-site-generator/
 # https://github.com/theacodes/blog.thea.codes/
-# 14/11/2020
+# 19/12/2020
 # encoding: utf8
 import frontmatter
 import cmarkgfm
@@ -61,7 +61,16 @@ def write_page(page, content):
     template = jinja_env.get_template('page.html')
     rendered = template.render(page=page, content=content)
     path.write_text(rendered, encoding='utf8')
-    
+
+def write_rss_feed(pages):
+    pages = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
+    path = out_folder / "feed" 
+    if path.exists() == False: path.mkdir(parents=False, exist_ok=True)
+    path = path / "rss.xml"
+    template = jinja_env.get_template('rss.xml')
+    rendered = template.render(pages=pages[0:5], config=config)
+    path.write_text(rendered, encoding='utf8')    
+
 # adds extras for tufte.css    
 def tuftify(content):
     count = 1
@@ -87,13 +96,6 @@ def tuftify(content):
         except:
             pass
 
-    #trying to add sections for tufte.css
-    #and not succeeding
-    #content = re.sub(r'<p>','<section><p>',content)    
-    #content = re.sub(r'</p>','</p></section>',content)
-    
-    # content = re.sub(r'<\/h2>','</h2><section>',content) 
-    #content = re.sub(r'<h2>','</section><h2>',content)   
     return content
 
 def write_index(topics, new):
@@ -103,10 +105,10 @@ def write_index(topics, new):
     # Extras:
     page['site_name'] = site_name
     page['index_url'] = "../"
-    #page['script'] = './scripts/sakura.js'
     page['date'] = date
     page['new'] = new
     page['topics'] = cloudify_topics(topics)
+    page['style'] = "." + config['style_sheet']
     content = wikilinkify(page.content, path.stem)
     # Render:
     template = jinja_env.get_template('index.html')
@@ -226,7 +228,8 @@ def write_topic_pages(topics, pages):
             'site_name': site_name,
             'index_url': "../../",
             'title': topic,
-            'date': date
+            'date': date,
+            'style': "../.." + config['style_sheet']
 
         }
 
@@ -341,7 +344,9 @@ def main():
         page['site_name'] = config['site_name']
         page['index_url'] = "../"    
         page['name'] = source.stem
+        page['url'] = config['siteurl'] + "/" + page['name'].replace(" ", "-").lower()
         page['backlinks'] = backlinks(source.stem)
+        page['style'] = ".." + config['style_sheet']
         # keep topics (pretty html) and topic (yaml data) apart
         if "topic" in page: page['topics'] = prettify_topics(str(page['topic']))
         write_page(page, content)
@@ -354,7 +359,7 @@ def main():
     new = new_articles(pages)
     write_index(topics, new)
     housekeeping()
-
+    write_rss_feed(pages)
     print("Processed " + str(count) + " files to " + str(out_folder))
 
 if __name__ == "__main__":

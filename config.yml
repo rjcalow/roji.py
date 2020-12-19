@@ -1,5 +1,8 @@
 author: Gardener
 site_name: Digital Garden
+#url base website.com etc
+siteurl: site.com
+description: a digital garden
 # folder of templates for jinja
 templates: templates
 # where are your markdown files stored
@@ -8,4 +11,5 @@ markdown_folder: in
 img_folder: imgs
 #where do you want your html files
 out_folder: docs
-
+#style sheet
+style_sheet: /assets/tufte.css
