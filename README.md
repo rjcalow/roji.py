@@ -25,7 +25,7 @@ This will create a html site in */docs*. Changes can be made in the template.htm
 
 ## Things to do 🍃
 Short term
-- N̶e̶s̶t̶ ̶s̶e̶c̶t̶i̶o̶n̶ ̶t̶a̶g̶s̶ ̶u̶n̶d̶e̶r̶ ̶h̶e̶a̶d̶i̶n̶g̶s̶ ̶f̶o̶r̶ ̶t̶u̶f̶t̶e̶.̶c̶s̶s̶  - Changed turfte css varient to [ascii doctor](https://github.com/darshandsoni/asciidoctor-skins/blob/71ce8dcd401600985dcce7b78d5b5d8b20a0a52d/css/tufte.css). It's now much cleaner.
+- N̶e̶s̶t̶ ̶s̶e̶c̶t̶i̶o̶n̶ ̶t̶a̶g̶s̶ ̶u̶n̶d̶e̶r̶ ̶h̶e̶a̶d̶i̶n̶g̶s̶ ̶f̶o̶r̶ ̶t̶u̶f̶t̶e̶.̶c̶s̶s̶  - Changed tufte css varient to [ascii doctor](https://github.com/darshandsoni/asciidoctor-skins/blob/71ce8dcd401600985dcce7b78d5b5d8b20a0a52d/css/tufte.css). It's now much cleaner.
 
 Long term
 - Streamline topics
