@@ -3,11 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{page.css}}">
-    <title>{{page.title}}</title>
-    <meta name="description" content="{{garden.description}}">
-    <meta name="keywords" content="{{garden.keywords}}">
-    <meta name="author" content="{{garden.author}}>
+    <link rel="stylesheet" href="../assets/sakura_mod.css">
+    <title>roji</title>
+    <meta name="description" content="a digital garden">
+    <meta name="keywords" content="digital garden, notes, photography">
+    <meta name="author" content="Gardener>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
@@ -30,43 +30,50 @@
     </script>
 
   <button onclick="window.location.href='../';">🏠 Home</button>
-  <!-- <button onclick="window.location.href='{{garden.siteurl}}';">🏠 Home</button> -->
+  <!-- <button onclick="window.location.href='site.com';">🏠 Home</button> -->
 
 
     <hr>
-    <h1>{{page.title}}</h1>
+    <h1>roji</h1>
     
     
-    {{page.content}}
+    <p>A simple transitional Japanese garden.</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Roji">A wiki entry for Roji</a>.</li>
+</ul>
+<p>Keep it simple.
+    * roji is usually divided into an outer and inner garden*</p>
 
   
     <h2>Date</h2>
-<p><code>{{page.date}}</code></p>
+<p><code>8/9/2020</code></p>
 
-    {% if page.HTML_topics is defined %}
+    
       <h2>Topics</h2>
       <p>
-    {% for t in page.HTML_topics %}
-        <code>{{t}}</code>
-    {% endfor %}
-      </p>
-    {% else %}
-      <p></p>
-    {% endif %}
     
-    {% if page.backlinks %}
+        <code><a href="../topics/garden/">Garden</a></code>
+    
+        <code><a href="../topics/roji/">Roji</a></code>
+    
+      </p>
+    
+    
+    
     <h2>Mentioned in</h2>
-      {% for b in page.backlinks %}
-      <blockquote>{{b}}</blockquote>
-      {% endfor %}
       
-    {% endif %}
+      <blockquote><a href="../gardens/">gardens</a> <i><ul>
+<li>[[roji garden]] 🌱 </li>
+</ul></i></blockquote>
+      
+      
+    
 
     <blockquote>
     <footer>
-    <small>Text and images, unless stated, copyright {{garden.author}}</small></br>
-    <small>Pages generated on: {{garden.gen_date}}.
-    {{garden.footerhtml}}
+    <small>Text and images, unless stated, copyright Gardener</small></br>
+    <small>Pages generated on: 01/01/2021.
+    Made with <a href="https://github.com/oxalorg/sakura">Sakura.css</a> & <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
       </small>
    </footer></blockquote> 
   </div>

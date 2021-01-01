@@ -1,366 +1,157 @@
-# Roji.py 0.4.6 WIP digital garden generator
-# Used these as a starting point / basis for the generator backends:
-# https://blog.thea.codes/a-small-static-site-generator/
-# https://github.com/theacodes/blog.thea.codes/
-# 19/12/2020
-# encoding: utf8
-import frontmatter
-import cmarkgfm
-import pathlib
-import jinja2
-import shutil
-import re
-import os
 import yaml
+import pathlib
+import frontmatter
+from markdown import markdown
+from mdx_ext import findTopics
+from mdx_ext import WikiBrackets
+from mdx_urlize import UrlizeExtension
+from figureAltCaption import FigureCaptionExtension
+
+import jinja2
 from datetime import datetime
+import shutil
 
-file = open('config.yml', 'r')
-config = yaml.load(file, Loader=yaml.FullLoader)
-
-
-jinja_env = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(config['templates']),
-)
-
-site_name = config['site_name']
-author = config['author']
-out_folder = pathlib.Path (config['out_folder'])
-
-#uk date
-date = datetime.today().strftime('%d/%m/%Y')
-
-
-def htmlify(content):
-    #using cmarkgfm, but could be swapped out for another flavour of markdown.
-    content = cmarkgfm.github_flavored_markdown_to_html(content)
-    return content
-
-
-def files():
-    p = pathlib.Path(config["markdown_folder"])
-    return p.glob('*.md')
-
-
-def parse(source):
-    # Using nifty Frontmatter!
-    post = frontmatter.load(str(source), encoding='utf-8')
-    return post
-
-
-def write_page(page, content):
-    # Paths:
-    p = out_folder.joinpath("{}".format(page['name'].replace(" ", "-").lower()))
-    path = p.joinpath("index.html".format(page['name'].replace(" ", "-").lower()))
-
-    # Make folder if it does not exist:
-    if p.exists() == False:
-        p.mkdir(parents=False, exist_ok=True)
-
+class Garden:
     
-    # Jinja and pathlib write:
-    template = jinja_env.get_template('page.html')
-    rendered = template.render(page=page, content=content)
-    path.write_text(rendered, encoding='utf8')
+    def __init__(self):
+        self.gen_date = datetime.today().strftime('%d/%m/%Y')
+        #open w/ utf8 so emojis can be stored in yaml tags
+        with open("config.yml", "r", encoding='utf-8') as f:
+            config = yaml.load(f, Loader=yaml.SafeLoader)
 
-def write_rss_feed(pages):
-    pages = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
-    path = out_folder / "feed" 
-    if path.exists() == False: path.mkdir(parents=False, exist_ok=True)
-    path = path / "rss.xml"
-    template = jinja_env.get_template('rss.xml')
-    rendered = template.render(pages=pages[0:5], config=config)
-    path.write_text(rendered, encoding='utf8')    
+        for key in config: setattr(self, key, config[key])
 
-# adds extras for tufte.css    
-def tuftify(content):
-    count = 1
-    imgs = re.findall(r'<img(.*?)>' ,content)
+        self.topicsList = [] #used for unique tags
+        self.md_files = pathlib.Path(self.markdown_folder) #markdown files
 
-    for img in imgs:
-        img = str(img)
+    def parse(self):
+        self.pages = [] #stores page objects
+        for m in self.md_files.glob('*.md'):              
+            page = frontmatter.load(str(m), encoding='utf-8')
+            page.readablename = m.stem.replace("-", " ")
+            page.name = page.readablename.replace(" ", "_").replace("-", "_").lower()
+            page.template = self.template_page
+            page.RAW = page.content #unconverted markdown
+            page.content =  markdown(page.content,extensions=[FigureCaptionExtension(), WikiBrackets(), UrlizeExtension()])
+            page.topics = self.topic_helper(page['topic'])
+            page.HTML_topics = []
+            for t in page.topics:
+                if t not in self.topicsList: self.topicsList.append (t) #on the fly tag finding
+                page.HTML_topics.append('<a href="{path}">{name}</a>'.format(path="../topics/"+t.replace(" ","_")+"/", name=t.title())) 
+            
+            page.path = pathlib.Path(self.out_folder) / page.name
+            if "http" in self.css: page.css = self.css
+            else: page.css = ".." + self.css
+            self.pages.append(page)
+
+        for p in self.pages: p.backlinks = self.find_refences(p.readablename)
+
+        self.pages_by_date = sorted(self.pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
+
+    def find_refences(self, name):
+        found = []
+        find = "[[" + name.lower() + "]]"
+        for p in self.pages:
+            if find in p.RAW.lower():
+                lines = str(p.RAW).splitlines()
+                for line in lines: 
+                    if find in line.lower():
+                        found.append('<a href="{path}">{name}</a> <i>{l}</i>'.format(path="../"+p.name + "/", name=p.readablename, l=markdown(line)))
+        if len(found) >= 1: return found
+        else: return None
+
+
+    def build_Topicpages(self):
+        for t in self.topicsList:
+            topicpage = self.Topicpage(t, self)
+            self.writePage(topicpage)
+
+
+    def topic_helper(self, topics):
+        #cleans up lazy yaml writing with "," instead of lists
+        cleanTopics=[]
+        if isinstance(topics, str) == True:
+            lst = topics.split(",")
+            for l in lst:
+                l = "".join(l.lstrip().rstrip())
+                if l != "": cleanTopics.append(l)
+            return cleanTopics
+        else: return topics
+
+    def build(self):
+        #render tag/topic pages
+        self.build_Topicpages()
+
+        #render pages
+        for p in self.pages:
+            self.writePage(p)
         
-        try:
-            alt = re.search(r'alt=".(.*?)"', img).group(0)
-            alt_text = re.search(r'".(.*?)"', alt).group(0)
-            alt_text = alt_text.replace('"', "")
-            if alt_text != None:
-                # the following is messy BUT readable
-                newline = '<figure>'
-                newline += ' '
-                newline += "\n <img" + str(img) + '>'
-                newline += '<label for="' + alt_text.replace(" ", "-")[0:4] + str(count) + '" class="margin-toggle">' + str(count)+'</label><input type="checkbox" id="' + alt_text.replace(" ", "-")[0:4] + str(count) + '" class="margin-toggle">'
-                newline += '\n<span class="marginnote">' + str(alt_text) + '</span>'
-                newline += "</figure>"
-                content = content.replace("<img" + str(img)+">", newline)
-                count += 1
-        except:
-            pass
+        #render homepage
+        homepage = self.Homepage(self)
+        self.writePage(homepage)
 
-    return content
-
-def write_index(topics, new):
-    # Paths:
-    page = parse("index.md")
-    path = out_folder.joinpath("index.html")
-    # Extras:
-    page['site_name'] = site_name
-    page['index_url'] = "../"
-    page['date'] = date
-    page['new'] = new
-    page['topics'] = cloudify_topics(topics)
-    page['style'] = "." + config['style_sheet']
-    content = wikilinkify(page.content, path.stem)
-    # Render:
-    template = jinja_env.get_template('index.html')
-    rendered = template.render(page=page, content=(htmlify(content)))
-    path.write_text(rendered, encoding='utf8')
+        #copy assets to www dir
+        for f in self.folders_to_copy: self.copy_assets(f)
+        self.copy_assets(self.img_folder)
 
 
-def wikilinkify(m, file):
-    # A module might do this better,
-    # but trying to keep the number of 
-    # dependencies down.
-    
-    # Using re to find links into list
-    links = (re.findall(r'\[\[(.*?)\]\]', m))
-    # remove duplicates
-    links = list(dict.fromkeys(links))
 
-    # Sort list
-    for link in links:
-        link = ''.join(link)
-        old = "[[" + link + "]]"
-        if "index" in file:
-            linkurl = "[" + md_linkify(link, "", "/") + "]"
-        else:
-            linkurl = "[" + md_linkify(link, "../", "/") + "]"
+    def copy_assets(self, folder):
+        path_in = pathlib.Path(folder)
+        path_out = pathlib.Path(self.out_folder)  / path_in.name
+        #print (path_in.parent.name)
 
-        x = m.count(link)
-        m = m.replace(old, linkurl, x)
+        if path_out.exists() == False:
+            path_out.mkdir(parents=False, exist_ok=True)
 
-    ## {topic} links 
-    links = (re.findall(r'{(.*?)}', m))
-    # remove duplicates
-    links = list(dict.fromkeys(links))
-    for link in links:
-        old = "{" + link + "}"
-        if "index" in file:
-            linkurl = "[" + md_linkify(link, "./topics/", "/") + "]"
-        else:
-            linkurl = "[" + md_linkify(link, "../topics/", "/") + "]"
+        files = path_in.glob('*')
 
-        x = m.count(link)
-        m = m.replace(old, linkurl, x)
+        for f in files:
+            path = path_out.joinpath(f.name)
+            shutil.copy(str(f), str(path))
 
-
-    return m
-
-
-def cloudify_topics(topics):
-    #for index page display
-    string = ""
-    topics.sort(reverse=False)
-    for topic in topics:
-        string += md_linkify(topic, "./topics/", "/") + ", "
-
-    return htmlify(string)
-
-def prettify_topics(topics):
-    # preparing topics to display on pages
-    
-    text = ""
-    if "," in topics:
-        strings = str(topics).split(",")
-        for string in strings:
-             text += md_linkify(string.lstrip().rstrip(), "../topics/", "/") + ", "  
-    else:
-        text = md_linkify(topics, "../topics/", "/")
-    
-    return htmlify(text) 
-
-def get_topics(pages):
-    topics = []
-    for page in pages:
-        if 'topic' in page:
-            if "," in page['topic']:
-                strings = str(page['topic']).split(",")
-                for string in strings:
-                    string = string.lstrip().rstrip()
-                    if string != " " and string not in topics: topics.append(string)
-            else:
-                string = page['topic'].lstrip().rstrip()
-                if string != " " and string not in topics: topics.append(string)
-    
-    # Further clean up
-    topics = set(topics)
-    #topics = list(dict.fromkeys(topics))
-    
-    return list(topics)
-
-
-def write_topic_pages(topics, pages):
-    #pages_by_date = sorted(pages, key=lambda page: page['date'], reverse=False)
-    # Using datetime strptime instead of above
-    pages_by_date = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
-    
-    topic_folder = out_folder.joinpath("topics")
-    
-    for topic in topics:
-        #content = "## " + topic.replace("-", " ").title() + " \n"
-        content = ""
-        for page in pages_by_date:
-            if 'topic' in page:
-
-                if "," in page['topic']:
-                    strings = str(page['topic']).split(",")
-                    for string in strings:
-                        if string.lower().lstrip().rstrip()  == topic.lower().lstrip().rstrip() :
-                            content = content + md_linkify(page['name'].replace("-", " "), '../../', '/') + " <small>" + page['date'] + "</small></br> \n"
-                            break
-
-
-                if topic.lower() == page['topic'].lower(): content = content + md_linkify(page['name'].replace("-", " "), '../../', '/') + " <small>" + page['date'] + "</small></br> \n"
-
-
-        content = htmlify(content)
-        page = {
-            'content': content,
-            'site_name': site_name,
-            'index_url': "../../",
-            'title': topic,
-            'date': date,
-            'style': "../.." + config['style_sheet']
-
-        }
-
-        topicpath = str(topic.replace(" ", "-").lower())
-        p = topic_folder.joinpath(topicpath)
-        path = p.joinpath("index.html" )
-        
-        if p.exists() == False:
-            p.mkdir(parents=True, exist_ok=True)
-        
-        # the following finds if a page with the topic name already exists
-        # prefering to use the page
-        already_a_page = False
-        for f in files():
-            if topic.replace(" ", "-") == f.stem:
-                already_a_page = True
-        
-        if already_a_page == False:        
-            template = jinja_env.get_template('topic.html')
-            rendered = template.render(page=page, content=content)
-            path.write_text(rendered, encoding='utf8')
-
-
-def find_refences(name):
-    found = []
-    
-    for f in files():
-        text = f.read_text(encoding='utf8')
-        lines = text.splitlines()
-        temp=[]
-        for line in lines:
-            # need to use re or str.lower() for case
-            #line = line.lower()
-            x = line.lower().count("[[" + name.replace("-", " ").lower() + "]]")
-            if x >= 1:
-                temp=[f.stem, line]
-                found.append(temp)
-    
-    return found
-
-
-def backlinks(name):    
-    list_ = find_refences(name)
-    
-    if len(list_) == 0:
-        return ""
-    string = "### Backlinks \n"
-    for l in list_:
-        string = string + "##### " + md_linkify(l[0], "../", "/") + " \n >" + l[1] + " \n"
-    string = htmlify(string)
-    return string
-
-
-def md_linkify(text, base, end):
-    text = "["+text.replace("-", " " )+"](" + base + text.replace(" ", "-").lower() + end + ")"
-    return text
-
-
-def new_articles(pages):
-    pages_by_date = sorted(pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
-
-    new = ""
-
-    for page in pages_by_date[0:5]:
-        new += " - " + md_linkify(page['name'], "./", "/") + " *" + page['date'] + "* \n"
-
-    return htmlify(new)
-
-
-def housekeeping():
-    #extras go here
-    ##copy images
-    imgs_in = pathlib.Path(config['img_folder'])
-    imgs_out = out_folder.joinpath(imgs_in.name)
-    #print (imgs_out)
-    imgs = imgs_in.glob('*')
+    def writePage(self, page):
+        if page.path.exists() == False: page.path.mkdir(parents=True, exist_ok=True)
+        page.path = page.path / "index.html"
+        jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(self.templates))
+        template = jinja_env.get_template(page.template)
+        rendered = template.render(page=page, garden=self)
+        page.path.write_text(rendered, encoding='utf8')
     
 
-    #if imgs outfolder doesnt exist make it
-    if imgs_out.exists() == False:
-            imgs_out.mkdir(parents=False, exist_ok=True)
+    class Homepage:
+        def __init__(self, Garden):
+            self.title = Garden.site_name
+            self.template = Garden.template_homepage
+            self.path = pathlib.Path(Garden.out_folder)
+            if "http" in Garden.css: self.css = Garden.css
+            else: self.css = "." + Garden.css
+            self.TopicSection = []
+            Garden.topicsList.sort(reverse=False)
+            for t in Garden.topicsList:
+                self.TopicSection.append('<a href="{path}">{name}</a>'.format(path="./topics/"+t.replace(" ","_")+"/", name=t))
+            self.new = []
+            for p in Garden.pages_by_date[0:5]:
+                self.new.append('<p><a href="{path}">{name}</a> <i>{date}</i></p>'.format(path="./"+p.name, name=p['title'], date=p['date']))
+            #self.cloud  
 
-    for i in imgs:
-        path = imgs_out.joinpath(i.name)
-        shutil.copy(str(i), str(path))
-
-    assets_folder = pathlib.Path("assets")
-    assets_folder_out = out_folder.joinpath("assets")
-
-    if assets_folder_out.exists() == False:
-        assets_folder_out.mkdir(parents=False, exist_ok=True)
-
-    assets_ = assets_folder.glob('*')
-    for a in assets_:
-        path = assets_folder_out.joinpath(a.name)
-        
-        shutil.copy(str(a), str(path))
-
-def main():
-    count = 0
-    pages = []
-    sources = files()
-    
-    for source in sources:
-        page = parse(source)
-        
-        content = wikilinkify(page.content, str(source))
-        
-        content = htmlify(content)
-        content = tuftify(content)
-        page['author'] = config['author']
-        page['site_name'] = config['site_name']
-        page['index_url'] = "../"    
-        page['name'] = source.stem
-        page['url'] = config['siteurl'] + "/" + page['name'].replace(" ", "-").lower()
-        page['backlinks'] = backlinks(source.stem)
-        page['style'] = ".." + config['style_sheet']
-        # keep topics (pretty html) and topic (yaml data) apart
-        if "topic" in page: page['topics'] = prettify_topics(str(page['topic']))
-        write_page(page, content)
-
-        pages.append(page)
-        count += 1
-
-    topics = get_topics(pages)
-    write_topic_pages(topics, pages)
-    new = new_articles(pages)
-    write_index(topics, new)
-    housekeeping()
-    write_rss_feed(pages)
-    print("Processed " + str(count) + " files to " + str(out_folder))
-
+    class Topicpage:
+        def __init__(self, name, Garden):
+            self.name = name    
+            self.title = name.title()   
+            self.template = Garden.template_topic                  
+            self.path = pathlib.Path(Garden.out_folder) / "topics" / str(self.name).replace(" ", "_") 
+            
+            if "http" in Garden.css: self.css = Garden.css
+            else: self.css = "../.." + Garden.css
+            self.content = []
+            for p in Garden.pages_by_date :
+                if name in p.topics:
+                    self.content.append('<p><a href="{path}">{name}</a> <i>{date}</i></p>'.format(path="../../"+p.name, name=p['title'], date=p['date']))
+            
+            
 if __name__ == "__main__":
-    main()
+    g = Garden()
+    g.parse()
+    g.build()
+

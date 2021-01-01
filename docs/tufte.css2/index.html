@@ -3,69 +3,78 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../assets/tufte.css">
-    <link rel="stylesheet" href="../assets/extra.css" />
-    
+    <link rel="stylesheet" href="../assets/sakura_mod.css">
     <title>Tufte.css 2</title>
-    <meta name="description" content="Digital garden of photography notes.">
-    <meta name="keywords" content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape">
-    <meta name="author" content="R J Calow">
+    <meta name="description" content="a digital garden">
+    <meta name="keywords" content="digital garden, notes, photography">
+    <meta name="author" content="Gardener>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-<link rel="manifest" href="../assets/site.webmanifest">
-<link rel="shortcut icon" href="../assets/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-config" content="../assets/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="shortcut icon" href="../assets/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
   </head>
 
   <body>
   <article>
     
-    <small><a href="../">back</a></small>
+    <button onclick="goBack()">⬅️ Go Back</button>
+    <script>function goBack() {
+      window.history.back();
+    }
+    </script>
 
+  <button onclick="window.location.href='../';">🏠 Home</button>
+  <!-- <button onclick="window.location.href='site.com';">🏠 Home</button> -->
+
+
+    <hr>
     <h1>Tufte.css 2</h1>
     
     
     <p>I have been looking at parsers with plugins and options for blocks to use tufte.css section tag. My markdown files do not have inbuilt tags and nor do I want to go through each one adding tags. So I need a python solution to add section tags under headings and close at the next heading.  This is probably a different project altogether as it's about tufte.css than the digital garden.</p>
 <p>I have already wrote some basic code to move alt text to the margins</p>
-<pre><code>    count = 1
-    imgs = re.findall(r'&lt;img(.*?)&gt;' ,content)
+<p>~~~
+    count = 1
+    imgs = re.findall(r'<img(.*?)>' ,content)</p>
+<pre><code>for img in imgs:
+    img = str(img)
 
-    for img in imgs:
-        img = str(img)
-        
-        try:
-            alt = re.search(r'alt=&quot;.(.*?)&quot;', img).group(0)
-            alt_text = re.search(r'&quot;.(.*?)&quot;', alt).group(0)
-            alt_text = alt_text.replace('&quot;', &quot;&quot;)
-            if alt_text != None:
-                # the following is messy BUT readable
-                newline = '&lt;figure&gt;'
-                newline += ' '
-                newline += &quot;\n &lt;img&quot; + str(img) + '&gt;'
-                newline += '&lt;label for=&quot;' + alt_text.replace(&quot; &quot;, &quot;-&quot;)[0:4] + str(count) + '&quot; class=&quot;margin-toggle&quot;&gt;' + str(count)+'&lt;/label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;' + alt_text.replace(&quot; &quot;, &quot;-&quot;)[0:4] + str(count) + '&quot; class=&quot;margin-toggle&quot;&gt;'
-                newline += '\n&lt;span class=&quot;marginnote&quot;&gt;' + str(alt_text) + '&lt;/span&gt;'
-                newline += &quot;&lt;/figure&gt;&quot;
-                content = content.replace(&quot;&lt;img&quot; + str(img)+&quot;&gt;&quot;, newline)
-                count += 1
-        except:
-            pass
+    try:
+        alt = re.search(r'alt=".(.*?)"', img).group(0)
+        alt_text = re.search(r'".(.*?)"', alt).group(0)
+        alt_text = alt_text.replace('"', "")
+        if alt_text != None:
+            # the following is messy BUT readable
+            newline = '&lt;figure&gt;'
+            newline += ' '
+            newline += "\n &lt;img" + str(img) + '&gt;'
+            newline += '&lt;label for="' + alt_text.replace(" ", "-")[0:4] + str(count) + '" class="margin-toggle"&gt;' + str(count)+'&lt;/label&gt;&lt;input type="checkbox" id="' + alt_text.replace(" ", "-")[0:4] + str(count) + '" class="margin-toggle"&gt;'
+            newline += '\n&lt;span class="marginnote"&gt;' + str(alt_text) + '&lt;/span&gt;'
+            newline += "&lt;/figure&gt;"
+            content = content.replace("&lt;img" + str(img)+"&gt;", newline)
+            count += 1
+    except:
+        pass
 </code></pre>
-
+<p>~~~</p>
 
   
     <h2>Date</h2>
-<p><i>14/11/2020</i></p>
+<p><code>14/11/2020</code></p>
 
     
-      <h2>Topics:</h2>
-      <p><a href="../topics/changes/">changes</a></p>
-
+      <h2>Topics</h2>
+      <p>
     
+        <code><a href="../topics/changes/">Changes</a></code>
+    
+      </p>
     
     
     
@@ -73,13 +82,11 @@
     <blockquote>
     <footer>
     <small>Text and images, unless stated, copyright Gardener</small></br>
-      <small>Pages generated on: 14/11/2020.</small>
-      
-        Made with
-        <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
-        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-     </footer></blockquote> 
-    </div>
-    </article>
-  </body>
+    <small>Pages generated on: 01/01/2021.
+    Made with <a href="https://github.com/oxalorg/sakura">Sakura.css</a> & <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
+      </small>
+   </footer></blockquote> 
+  </div>
+  </article>
+</body>
 </html>
