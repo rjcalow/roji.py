@@ -3,46 +3,46 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{page.style}}" />
-    <link rel="stylesheet" href="../../assets/extra.css" />
-    {#
-    <script src="{{page.script}}"></script>
-    #}
+    <link rel="stylesheet" href="{{page.css}}">
     <title>{{page.title}}</title>
-    <meta name="description" content="Digital garden of photography notes." />
-    <meta
-      name="keywords"
-      content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape"
-    />
-    <meta name="author" content="R J Calow" />
+    <meta name="description" content="{{garden.description}}">
+    <meta name="keywords" content="{{garden.keywords}}">
+    <meta name="author" content="{{garden.author}}>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-<link rel="manifest" href="../assets/site.webmanifest">
-<link rel="shortcut icon" href="../assets/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-config" content="../assets/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png">
+    <link rel="manifest" href="../../assets/site.webmanifest">
+    <link rel="shortcut icon" href="../../assets/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../../assets/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
   </head>
 
   <body>
   <article>
-    <small><a href="{{page.index_url}}">back</a></small>
+    <button onclick="goBack()">⬅️ Go Back</button>
+    <script>function goBack() {
+      window.history.back();
+    }
+    </script>
 
+  <button onclick="window.location.href='../../';">🏠 Home</button>
+<hr>
  
     <h1>{{page.title}}</h1>
-
-    {{content}}
-    <blockquote>
+    {% for t in page.content %}
+        {{t}}
+    {% endfor %}
     <footer>
-      <small>Pages generated on: {{page.date}}.</small>
+      <blockquote>
       
-        Made with
-        <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
-        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-     </footer></blockquote> 
+        <small>Site generated on: {{garden.gen_date}}.
+        {{garden.footerhtml}}
+          </small>
+       </blockquote> </footer> 
     </div>
     </article>
   </body>

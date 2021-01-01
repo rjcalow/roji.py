@@ -1,15 +1,29 @@
 author: Gardener
-site_name: Digital Garden
+site_name: 🌻 Digital Garden
 #url base website.com etc
 siteurl: site.com
+#Metadata
 description: a digital garden
+keywords: digital garden, notes, photography
+#Homepage paragrah not used at mo
+homepage_intro: something
 # folder of templates for jinja
 templates: templates
-# where are your markdown files stored
+template_page: page.html
+template_homepage: index.html
+template_topic: topic.html
 markdown_folder: in
 # image folder
 img_folder: imgs
 #where do you want your html files
 out_folder: docs
-#style sheet
-style_sheet: /assets/tufte.css
+#folders to be copied into www dir
+folders_to_copy:
+  - assets
+#asset folder
+asset_folder: assets
+#style sheet i.e. /assets/tufte.css
+css: /assets/sakura_mod.css
+#css: https://classless.de/classless.css
+#css: /assets/tufte.css
+footerhtml: Made with <a href="https://github.com/oxalorg/sakura">Sakura.css</a> & <a href="https://github.com/rjcalow/roji.py">Roji.py</a>

@@ -3,45 +3,46 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../assets/tufte.css" />
-    <link rel="stylesheet" href="../../assets/extra.css" />
-    
-    <title>examples</title>
-    <meta name="description" content="Digital garden of photography notes." />
-    <meta
-      name="keywords"
-      content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape"
-    />
-    <meta name="author" content="R J Calow" />
+    <link rel="stylesheet" href="../../assets/sakura_mod.css">
+    <title>Examples</title>
+    <meta name="description" content="a digital garden">
+    <meta name="keywords" content="digital garden, notes, photography">
+    <meta name="author" content="Gardener>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-<link rel="manifest" href="../assets/site.webmanifest">
-<link rel="shortcut icon" href="../assets/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-config" content="../assets/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png">
+    <link rel="manifest" href="../../assets/site.webmanifest">
+    <link rel="shortcut icon" href="../../assets/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../../assets/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
   </head>
 
   <body>
   <article>
-    <small><a href="../../">back</a></small>
+    <button onclick="goBack()">⬅️ Go Back</button>
+    <script>function goBack() {
+      window.history.back();
+    }
+    </script>
 
+  <button onclick="window.location.href='../../';">🏠 Home</button>
+<hr>
  
-    <h1>examples</h1>
-
-    <p><a href="../../a-page/">a page</a> <small>8/9/2020</small></br></p>
-
-    <blockquote>
+    <h1>Examples</h1>
+    
+        <p><a href="../../a_page">Markdown example</a> <i>8/9/2020</i></p>
+    
     <footer>
-      <small>Pages generated on: 19/12/2020.</small>
+      <blockquote>
       
-        Made with
-        <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
-        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-     </footer></blockquote> 
+        <small>Site generated on: 01/01/2021.
+        Made with <a href="https://github.com/oxalorg/sakura">Sakura.css</a> & <a href="https://github.com/rjcalow/roji.py">Roji.py</a>
+          </small>
+       </blockquote> </footer> 
     </div>
     </article>
   </body>

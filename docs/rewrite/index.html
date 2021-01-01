@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../assets/sakura_mod.css">
-    <title>Gardens</title>
+    <title>Rewrite</title>
     <meta name="description" content="a digital garden">
     <meta name="keywords" content="digital garden, notes, photography">
     <meta name="author" content="Gardener>
@@ -34,27 +34,33 @@
 
 
     <hr>
-    <h1>Gardens</h1>
+    <h1>Rewrite</h1>
     
     
-    <h2>Types of garden</h2>
+    <p>I have completely rewritten my tiny digital garden generator. </p>
+<p>Rather than LOTS of functions, it now uses objects, adopts the frontmatter page object more, and uses YAML settings to inject information. </p>
+<p>Settings are loaded into the main object with:</p>
+<pre><code>with open("config.yml", "r", encoding='utf-8') as f:
+    config = yaml.load(f, Loader=yaml.SafeLoader)
+
+for key in config: setattr(self, key, config[key])
+</code></pre>
+<p>Additionally, I have stuck to using the Python-Markdown package, and have moved some functions to extensions. Third-party extensions include the FigureCaption extension and UrlizeExtension. The goal is to include enough features to allow for the conversion of markdown notes without worry.</p>
+<p>Features I need now:</p>
 <ul>
-<li><a href="../roji_garden/">roji garden</a> 🌱 </li>
-<li><a href="https://en.wikipedia.org/wiki/Kenroku-en">Kenroku-en</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Ry%C5%8Dan-ji">Ryōan-ji</a></li>
+<li>renable rss feed generation</li>
+<li>a image processor to scrub metadata and resize/compress</li>
 </ul>
 
   
     <h2>Date</h2>
-<p><code>8/9/2020</code></p>
+<p><code>1/1/2021</code></p>
 
     
       <h2>Topics</h2>
       <p>
     
-        <code><a href="../topics/gardening/">Gardening</a></code>
-    
-        <code><a href="../topics/garden/">Garden</a></code>
+        <code><a href="../topics/changes/">Changes</a></code>
     
       </p>
     

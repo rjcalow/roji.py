@@ -3,46 +3,44 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{page.style}}" />
-    <link rel="stylesheet" href="./assets/extra.css" />
+    <link rel="stylesheet" href="{{page.css}}">
     <title>{{page.title}}</title>
-    <meta name="description" content="Digital garden of photography notes." />
-    <meta
-      name="keywords"
-      content="digital garden, notes, articles, photography, photographic, Calow, art, creative, landscape"
-    />
-    <meta name="author" content="R J Calow" />
+    <meta name="description" content="{{garden.description}}">
+    <meta name="keywords" content="{{garden.keywords}}">
+    <meta name="author" content="{{garden.author}}>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
-<link rel="manifest" href="./assets/site.webmanifest">
-<link rel="shortcut icon" href="./assets/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-config" content="./assets/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+  <link rel="manifest" href="./assets/site.webmanifest">
+  <link rel="shortcut icon" href="./assets/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-config" content="./assets/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
 
   </head>
 
   <body>
   <article>
-    <h1>{{page.site_name}}</h1>
+    <h1>{{garden.site_name}}</h1>
     
-    {{content}}
+    {{page.content}}
     
 
     <h2>Newest propagations</h2>
     
-    {{page.new}}
+    {% for n in page.new %}
+    <p>{{n}}</p>
+    {% endfor %}
  
     <h2>Seeds</h2>
+    <p>
+    {% for t in page.TopicSection %}
+      {{t}} 
+    {% endfor %}
+    </p>
     
-    {{page.topics}}
-  
-
-      
-  
     <h2>Digital Garden?</h2>
     
     <p>
@@ -56,15 +54,13 @@
    
     <p></p>
   
-
-    <blockquote>
     <footer>
-      <small>Pages generated on: {{page.date}}.</small>
-      
-        Made with
-        <a href="https://github.com/edwardtufte/tufte-css">tufte.css</a> +
-        <a href="https://github.com/rjcalow/roji.py">Roji.py</a></small>
-     </footer></blockquote> 
+    <blockquote>
+    
+      <small>Site generated on: {{garden.gen_date}}.
+      {{garden.footerhtml}}
+        </small>
+     </blockquote> </footer>
     </div>
     </article>
   </body>
