@@ -2,10 +2,12 @@ import yaml
 import pathlib
 import frontmatter
 from markdown import markdown
-from mdx_ext import findTopics
-from mdx_ext import WikiBrackets
-from mdx_urlize import UrlizeExtension
-from figureAltCaption import FigureCaptionExtension
+from mdx_extensions.mdx_ext import findTopics
+from mdx_extensions.mdx_ext import WikiBrackets
+from mdx_extensions.mdx_urlize import UrlizeExtension
+from mdx_extensions.figureAltCaption import FigureCaptionExtension
+from mdx_extensions.mdx_truly_sane_lists import TrulySaneListExtension
+from markdown.extensions.toc import TocExtension
 
 import jinja2
 from datetime import datetime
@@ -32,7 +34,7 @@ class Garden:
             page.name = page.readablename.replace(" ", "_").replace("-", "_").lower()
             page.template = self.template_page
             page.RAW = page.content #unconverted markdown
-            page.content =  markdown(page.content,extensions=[FigureCaptionExtension(), WikiBrackets(), UrlizeExtension()])
+            page.content =  markdown(page.content,extensions=[FigureCaptionExtension(), WikiBrackets(), UrlizeExtension(),TocExtension(),TrulySaneListExtension()])
             page.topics = self.topic_helper(page['topic'])
             page.HTML_topics = []
             for t in page.topics:
@@ -98,7 +100,7 @@ class Garden:
 
     def copy_assets(self, folder):
         path_in = pathlib.Path(folder)
-        path_out = pathlib.Path(self.out_folder)  / path_in.name
+        path_out = pathlib.Path(self.out_folder) / path_in.name
         #print (path_in.parent.name)
 
         if path_out.exists() == False:
@@ -126,14 +128,22 @@ class Garden:
             self.path = pathlib.Path(Garden.out_folder)
             if "http" in Garden.css: self.css = Garden.css
             else: self.css = "." + Garden.css
+            
+            if Garden.displayIndexmd == True:
+                with open("index.md", "r", encoding='utf-8') as f:
+                    self.content = markdown(f.read(),extensions=[FigureCaptionExtension(), WikiBrackets(), UrlizeExtension()])
+                    #messy hack to make extension produced links work on homepage
+                    self.content = self.content.replace('<a href="../', '<a href="./')
+            
             self.TopicSection = []
             Garden.topicsList.sort(reverse=False)
             for t in Garden.topicsList:
                 self.TopicSection.append('<a href="{path}">{name}</a>'.format(path="./topics/"+t.replace(" ","_")+"/", name=t))
+            
             self.new = []
             for p in Garden.pages_by_date[0:5]:
                 self.new.append('<p><a href="{path}">{name}</a> <i>{date}</i></p>'.format(path="./"+p.name, name=p['title'], date=p['date']))
-            #self.cloud  
+            
 
     class Topicpage:
         def __init__(self, name, Garden):

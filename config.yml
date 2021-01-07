@@ -1,17 +1,23 @@
 author: Gardener
-site_name: 🌻 Digital Garden
+site_name: Digital Garden 🌻
 #url base website.com etc
 siteurl: site.com
 #Metadata
 description: a digital garden
 keywords: digital garden, notes, photography
-#Homepage paragrah not used at mo
-homepage_intro: something
+
+#HOMEPAGE 
+# use index.md for homepage content
+displayIndexmd: True
+# show new posts / makes it like a blog
+displayNew: False
+
 # folder of templates for jinja
 templates: templates
 template_page: page.html
 template_homepage: index.html
 template_topic: topic.html
+#where the markdown files are stored 
 markdown_folder: in
 # image folder
 img_folder: imgs
@@ -20,10 +26,12 @@ out_folder: docs
 #folders to be copied into www dir
 folders_to_copy:
   - assets
+
 #asset folder
 asset_folder: assets
+#script for furture darkmode
+script: /assets/mode.js
 #style sheet i.e. /assets/tufte.css
 css: /assets/sakura_mod.css
-#css: https://classless.de/classless.css
-#css: /assets/tufte.css
+
 footerhtml: Made with <a href="https://github.com/oxalorg/sakura">Sakura.css</a> & <a href="https://github.com/rjcalow/roji.py">Roji.py</a>

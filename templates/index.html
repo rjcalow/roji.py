@@ -9,6 +9,7 @@
     <meta name="keywords" content="{{garden.keywords}}">
     <meta name="author" content="{{garden.author}}>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{{garden.script}}"></script>
 
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
@@ -27,12 +28,15 @@
     
     {{page.content}}
     
-
-    <h2>Newest propagations</h2>
-    
-    {% for n in page.new %}
-    <p>{{n}}</p>
-    {% endfor %}
+    {% if garden.displayNew == true %}
+      <h2>Newest propagations</h2>
+      <p>
+      {% for n in page.new %}
+      {{n}}
+      {% endfor %}
+      </p>
+    {% endif %}
+   
  
     <h2>Seeds</h2>
     <p>
@@ -41,18 +45,7 @@
     {% endfor %}
     </p>
     
-    <h2>Digital Garden?</h2>
-    
-    <p>
-      Rather than a blog -a restrictive stream of self promotion and negative
-      connotations spearheaded by <em>influencers</em>, a digital garden is a
-      place to grow ideas. For a better explanation see
-      <a href="https://maggieappleton.com/garden-history"
-        >maggieappleton.com/garden-history</a
-      >.
-    </p>
-   
-    <p></p>
+
   
     <footer>
     <blockquote>
