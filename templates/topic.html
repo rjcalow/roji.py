@@ -9,6 +9,7 @@
     <meta name="keywords" content="{{garden.keywords}}">
     <meta name="author" content="{{garden.author}}>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{{garden.script}}"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
@@ -23,14 +24,8 @@
 
   <body>
   <article>
-    <button onclick="goBack()">⬅️ Go Back</button>
-    <script>function goBack() {
-      window.history.back();
-    }
-    </script>
-
-  <button onclick="window.location.href='../../';">🏠 Home</button>
-<hr>
+    <header><h4><a href="../../">{{garden.site_name}}</a></h4></header>
+    
  
     <h1>{{page.title}}</h1>
     {% for t in page.content %}

@@ -1,7 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Work+Sans:wght@300&display=swap");
+/* $color-text: #dedce5; */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200&display=swap");
 html {
   font-size: 62.5%;
-  font-family: -apple-system, BlinkMacSystemFont, "Work Sans", "roboto", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "roboto slab", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 body {
@@ -9,8 +10,8 @@ body {
   line-height: 1.618;
   max-width: 38em;
   margin: auto;
-  color: #222222;
-  background-color: #ffffff;
+  color: #c9c9c9;
+  background-color: #222222;
   padding: 13px;
 }
 
@@ -26,8 +27,8 @@ body {
 }
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.1;
-  font-family: "Inter", serif;
-  font-weight: 200;
+  font-family: -apple-system, BlinkMacSystemFont, "roboto slab", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-weight: 500;
   margin-top: 3.5rem;
   margin-bottom: 1.5rem;
   overflow-wrap: break-word;
@@ -70,19 +71,19 @@ small, sub, sup {
 }
 
 hr {
-  border-color: #aa54ff;
+  border-color: #ffffff;
 }
 
 a {
   text-decoration: none;
-  color: #aa54ff;
+  color: #ffffff;
 }
 a:hover {
-  color: #521c87;
-  border-bottom: 2px solid #222222;
+  color: #c9c9c9;
+  border-bottom: 2px solid #c9c9c9;
 }
 a:visited {
-  color: #9121ff;
+  color: #e6e6e6;
 }
 
 ul {
@@ -102,9 +103,9 @@ blockquote {
   padding-top: 0.8em;
   padding-bottom: 0.8em;
   padding-right: 0.8em;
-  border-left: 5px solid #aa54ff;
+  border-left: 5px solid #ffffff;
   margin-bottom: 2.5rem;
-  background-color: #f7f7f7;
+  background-color: #4a4a4a;
 }
 
 blockquote p {
@@ -115,12 +116,12 @@ img, video {
   height: auto;
   max-width: 100%;
   margin-top: 0px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 2.5rem;
 }
 
 /* Pre and Code */
 pre {
-  background-color: #f7f7f7;
+  background-color: #4a4a4a;
   display: block;
   padding: 1em;
   overflow-x: auto;
@@ -131,7 +132,7 @@ pre {
 code {
   font-size: 0.9em;
   padding: 0 0.5em;
-  background-color: #f7f7f7;
+  background-color: #4a4a4a;
   white-space: pre-wrap;
 }
 
@@ -150,15 +151,15 @@ table {
 
 td, th {
   padding: 0.5em;
-  border-bottom: 1px solid #f7f7f7;
+  border-bottom: 1px solid #4a4a4a;
 }
 
 /* Buttons, forms and input */
 input, textarea {
-  border: 1px solid #222222;
+  border: 1px solid #c9c9c9;
 }
 input:focus, textarea:focus {
-  border: 1px solid #aa54ff;
+  border: 1px solid #ffffff;
 }
 
 textarea {
@@ -171,10 +172,10 @@ textarea {
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
-  background-color: #aa54ff;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #222222;
   border-radius: 1px;
-  border: 1px solid #aa54ff;
+  border: 1px solid #ffffff;
   cursor: pointer;
   box-sizing: border-box;
 }
@@ -183,50 +184,34 @@ textarea {
   opacity: 0.5;
 }
 .button:focus:enabled, .button:hover:enabled, button:focus:enabled, button:hover:enabled, input[type=submit]:focus:enabled, input[type=submit]:hover:enabled, input[type=reset]:focus:enabled, input[type=reset]:hover:enabled, input[type=button]:focus:enabled, input[type=button]:hover:enabled {
-  background-color: #521c87;
-  border-color: #521c87;
-  color: #ffffff;
+  background-color: #c9c9c9;
+  border-color: #c9c9c9;
+  color: #222222;
   outline: 0;
 }
 
 textarea, select, input {
-  color: #222222;
+  color: #c9c9c9;
   padding: 6px 10px;
   /* The 6px vertically centers text on FF, ignored by Webkit */
   margin-bottom: 10px;
-  background-color: #f7f7f7;
-  border: 1px solid #f7f7f7;
+  background-color: #4a4a4a;
+  border: 1px solid #4a4a4a;
   border-radius: 4px;
   box-shadow: none;
   box-sizing: border-box;
 }
 textarea:focus, select:focus, input:focus {
-  border: 1px solid #aa54ff;
+  border: 1px solid #ffffff;
   outline: 0;
 }
 
 input[type=checkbox]:focus {
-  outline: 1px dotted #aa54ff;
+  outline: 1px dotted #ffffff;
 }
 
 label, legend, fieldset {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-}
-
-header {
-  display:block;
-}
-header a {
-  text-decoration: none;
-  color: #150425;
-}
-header a:hover {
-  color: #521c87;
-  text-decoration: none;
-}
-header a:visited {
-  color: #150425;
-  text-decoration: none;
 }
