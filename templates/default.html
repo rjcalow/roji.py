@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8" />
-<title>{{garden.title}}</title>
+<title>{{page.title}}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
@@ -14,7 +14,7 @@
 <style>
   body {
     font-family: 'Jost', sans-serif;
-    line-height: 2.8;
+    line-height: 2.5;
 
   }
 
@@ -25,6 +25,7 @@
     font-family: 'Zilla Slab', monospace;
     letter-spacing: +0.02em;
     word-spacing: -0.1em;
+    line-height: 2em;
   }
 
   .w3-content a {
@@ -52,69 +53,98 @@
     box-shadow: none;
     line-height: 1.5;
   }
+
+  hr {
+    border-top: 2px dotted rgb(51, 51, 51);
+  }
 </style>
 
 <body>
 
-  <!-- sidebar -->
+
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="Menu">
     <button onclick="closeMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
 
     <ul class="w3-ul no-dec">
       <li><a href="{{garden.siteurl}}">$HOME</a></li>
-      {% for folder in garden.folders %}
-      <li><a href="{{garden.siteurl}}/{{folder.url}}">{{folder.title}}</a></li>
+      {% for doc in page.docs_by_date%}
+      <li><a href="#{{doc.url}}">{{doc.title}}</a></li>
       {% endfor %}
     </ul>
   </div>
 
 
-  <!-- bar -->
+
   <div class="w3-bar w3-padding w3-xlarge" style="text-decoration: none;">
     <a class="title" id="top" href="{{garden.siteurl}}">{{garden.title}}</a>
     <button class=" w3-button w3-right " onclick="openMenu()">&#9776;</button>
   </div>
 
-
-  <!-- content -->
-  <div class="w3-container w3-content  w3-section w3-margin-top w3-margin-bottom " style="max-width:1600px; margin-bottom: 4em;">
-    {{page.content}}
-    <div class="w3-row-padding menu w3-margin-top w3-margin-bottom">
-
-      {% for folders in garden.folders | batch(3, '&nbsp;') %}
-
-      {% for f in folders %}
-
-      {% if f.url is defined %}
-      <a class="w3-third w3-padding-large w3-xlarge w3-button w3-block w3-light-grey w3-border-white   w3-border "
-        style="" href="./{{f.url}}">{{f.title}}</a>
-      {% else %}
-      &nbsp;
-      {% endif %}
+  <div class="w3-content" style="">
+   <!-- DIR of page -->
+    <ul class="w3-ul w3-small w3-margin-bottom w3-monospace">
+      <li><a href="{{garden.siteurl}}">$HOME</a> / {{page.title}} / </li>
+      {% for doc in page.docs_by_date%}
+      <li><a href="#{{doc.url}}">{{doc.title}}</a></li>
       {% endfor %}
+    </ul>
+
+    <!-- doc -->
+    {% for doc in page.docs_by_date%}
+    <div class="w3-container" style="margin-bottom: 3em;">
 
 
-      {% endfor %}
-    </div>
-
-    <div class="w3-container ">
-      <h3>All Notes</h3>
       <div class="" style="">
-        <p>CTRL + F for search</p>
-        {% for doc in garden.docs %}
-        / {{doc.folder}} / <a href="{{doc.fullurl}}">{{doc.title}}</a> {{doc.date}} {{doc.emoji}}<br> 
-  
-        {% endfor %}
+        <a id="{{doc.url}}" href="{{doc.fullurl}}">
+          <h2 class="w3-bottombar w3-border-gark-grey " style="">{{doc.title}}</h2>
+        </a>
       </div>
+
+       <!-- MODALS of page -->
+      {% for modal in doc.modals %}
+      <div id="{{modal.id}}" class="w3-modal">
+        <div class="w3-modal-content w3-card">
+          <header class="w3-container"> 
+            <span onclick="document.getElementById('{{modal.id}}').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>{{modal.name}} is mentioned in:</h2>
+          </header>
+          <div class="w3-container">
+            {% for doc in modal.docs%}
+            <p class="w3-monospace">/ {{doc.folder}} / <a href="{{doc.fullurl}}">{{doc.title}}</a></p>
+            {% endfor %}
+          </div>
+
+
+          <footer class="w3-container w3-black">
+            <p onclick="document.getElementById('{{modal.id}}').style.display='none'" >ＣＬＯＳＥ</p>
+          </footer>
+        </div>
+      </div>
+      {% endfor %}
+
+      {{doc.content}}
+      <div class="w3-panel w3-leftbar w3-monospace w3-small "># ./{{doc.filename}} | {{doc.date}} {% if doc.updated is
+        defined %}| Updated {{doc.updated}}{% endif %}</div>
+      <hr>
+      <p class="w3-small w3-monospace"><a href="#top">Back to top</a></p>
+
+
+
     </div>
+
+
+    {% endfor %}
+
+
   </div>
+
   <!-- footer -->
-  <div class="w3-container w3-bottom w3-light-grey w3-border-top w3-border-dark-grey w3-margin-top w3-padding-top">
+  <div class="w3-container w3-light-grey w3-border-top w3-border-dark-grey w3-margin-top w3-padding-top">
     <p class="w3-right">{{garden.footer}} {{garden.email}}</p>
   </div>
 
   <script>
-
     function openMenu() {
       document.getElementById("Menu").style.display = "block";
     }

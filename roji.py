@@ -1,167 +1,197 @@
 import yaml
+import re
 import pathlib
 import frontmatter
-from markdown import markdown
-from mdx_extensions.mdx_ext import findTopics
-from mdx_extensions.mdx_ext import WikiBrackets
+import jinja2
+import urllib.parse
+from datetime import datetime
+import shutil
+import markdown
 from mdx_extensions.mdx_urlize import UrlizeExtension
 from mdx_extensions.figureAltCaption import FigureCaptionExtension
 from mdx_extensions.mdx_truly_sane_lists import TrulySaneListExtension
-from markdown.extensions.toc import TocExtension
+import PIL
+from PIL import Image
 
-import jinja2
-from datetime import datetime
-import shutil
 
 class Garden:
-    
-    def __init__(self):
+
+    def __init__(self, configfile):
         self.gen_date = datetime.today().strftime('%d/%m/%Y')
-        #open w/ utf8 so emojis can be stored in yaml tags
-        with open("config.yml", "r", encoding='utf-8') as f:
+        # open w/ utf8 so emojis can be stored in yaml tags
+        with open(configfile, "r", encoding='utf-8') as f:
             config = yaml.load(f, Loader=yaml.SafeLoader)
 
-        for key in config: setattr(self, key, config[key])
+        for key in config:
+            setattr(self, key, config[key])
 
-        self.topicsList = [] #used for unique tags
-        self.md_files = pathlib.Path(self.markdown_folder) #markdown files
+        self.md_files = pathlib.Path(self.markdown_folder)  # markdown files
+        self.img_folder = pathlib.Path(self.img_folder)
+        self.out_folder = pathlib.Path(self.out_folder)
+        self.homepage_md = pathlib.Path(self.homepage_md)
+        self.images = []  # images in docs
+        self.docs = []  # global store of docs for homepage
 
-    def parse(self):
-        self.pages = [] #stores page objects
-        for m in self.md_files.glob('*.md'):              
-            page = frontmatter.load(str(m), encoding='utf-8')
-            page.readablename = m.stem.replace("-", " ")
-            page.name = page.readablename.replace(" ", "_").replace("-", "_").lower()
-            page.template = self.template_page
-            page.RAW = page.content #unconverted markdown
-            page.content =  markdown(page.content,extensions=[FigureCaptionExtension(), WikiBrackets(), UrlizeExtension(),TocExtension(),TrulySaneListExtension()])
-            page.topics = self.topic_helper(page['topic'])
-            page.HTML_topics = []
-            for t in page.topics:
-                if t not in self.topicsList: self.topicsList.append (t) #on the fly tag finding
-                page.HTML_topics.append('<a href="{path}">{name}</a>'.format(path="../topics/"+t.replace(" ","_")+"/", name=t.title())) 
-            
-            page.path = pathlib.Path(self.out_folder) / page.name
-            if "http" in self.css: page.css = self.css
-            else: page.css = ".." + self.css
-            self.pages.append(page)
+    def parse(self, path):
+        try:
+            page = frontmatter.load(str(path), encoding='utf-8')
+            page.filename = path.name
+            page.name = path.stem
+            page.url = urllib.parse.quote_plus(str(path.stem))
+            page.RAW = page.content  # unconverted markdown
+            page.content = markdown.markdown(page.content, extensions=[
+                                             UrlizeExtension(), TrulySaneListExtension(), FigureCaptionExtension(), 'tables'])
+            page.images = self.find_images(page.content)
+            for i in page.images:
+                self.images.append(i.split("/")[-1])
+            page.title = str(page['title']).title()
 
-        for p in self.pages: p.backlinks = self.find_refences(p.readablename)
+            for html in self.html_changes:
+                page.content = page.content.replace(
+                    html['replace'], html['apply'])
 
-        self.pages_by_date = sorted(self.pages,key=lambda page: datetime.strptime(page['date'], "%d/%m/%Y"), reverse=True)
+            return page
 
-    def find_refences(self, name):
-        found = []
-        find = "[[" + name.lower() + "]]"
-        for p in self.pages:
-            if find in p.RAW.lower():
-                lines = str(p.RAW).splitlines()
-                for line in lines: 
-                    if find in line.lower():
-                        found.append('<a href="{path}">{name}</a> <i>{l}</i>'.format(path="../"+p.name + "/", name=p.readablename, l=markdown(line)))
-        if len(found) >= 1: return found
-        else: return None
+        except Exception as e:
+            print(e)
 
+    def process_image_folder(self):
+        images = self.img_folder.glob('*')
 
-    def build_Topicpages(self):
-        for t in self.topicsList:
-            topicpage = self.Topicpage(t, self)
-            self.writePage(topicpage)
+        imagefolder = self.out_folder / "imgs"
 
+        if imagefolder.exists() == False:
+            imagefolder.mkdir(parents=False, exist_ok=True)
 
-    def topic_helper(self, topics):
-        #cleans up lazy yaml writing with "," instead of lists
-        cleanTopics=[]
-        if isinstance(topics, str) == True:
-            lst = topics.split(",")
-            for l in lst:
-                l = "".join(l.lstrip().rstrip())
-                if l != "": cleanTopics.append(l)
-            return cleanTopics
-        else: return topics
+        for f in images:
+            process_path = imagefolder / f.name
+
+            if process_path.exists == True:
+                continue
+            if f.name in self.images:  # and process_path.exists == False:
+                # https://gist.github.com/tomvon/ae288482869b495201a0
+                mywidth = 1000
+
+                img = Image.open(f)
+                if img.width > mywidth and f.suffix != ".gif":
+                    wpercent = (mywidth/float(img.size[0]))
+                    hsize = int((float(img.size[1])*float(wpercent)))
+                    img = img.resize((mywidth, hsize), PIL.Image.ANTIALIAS)
+                    img.save(str(process_path))
+                else:
+                    shutil.copy(str(f), str(process_path))
 
     def build(self):
-        #render tag/topic pages
-        self.build_Topicpages()
+        # parse folders
+        self.folders = []
 
-        #render pages
-        for p in self.pages:
-            self.writePage(p)
-        
-        #render homepage
-        homepage = self.Homepage(self)
-        self.writePage(homepage)
+        #self.docs = []
 
-        #copy assets to www dir
-        for f in self.folders_to_copy: self.copy_assets(f)
-        self.copy_assets(self.img_folder)
+        #folder loop
+        for f in self.md_files.glob('*'):
+            if f.is_dir and self.img_folder != f:
+                F = self.Folder(f)  # folder class
 
+                #folder file loop
+                for doc in f.glob('*.md'):
+                    p = self.parse(doc)
+                    p.folder = str(f.name)
+                    p.fullurl = self.siteurl + "/" + \
+                        urllib.parse.quote_plus(
+                            f.name) + "#" + urllib.parse.quote_plus(p.name)
 
+                    F.docs.append(p)
+                    self.docs.append(p)
 
-    def copy_assets(self, folder):
-        path_in = pathlib.Path(folder)
-        path_out = pathlib.Path(self.out_folder) / path_in.name
-        #print (path_in.parent.name)
+                F.docs_by_date = sorted(F.docs, key=lambda doc: datetime.strptime(
+                    doc['date'], "%d/%m/%Y"), reverse=True)
+                F.path = self.out_folder / F.url
+                F.template = self.template_page
+                self.folders.append(F)
 
-        if path_out.exists() == False:
-            path_out.mkdir(parents=False, exist_ok=True)
+        #all docs for homepage
+        self.docs = sorted(self.docs, key=lambda doc: datetime.strptime(
+            doc['date'], "%d/%m/%Y"), reverse=True)
 
-        files = path_in.glob('*')
+        # wiki links
+        reg = re.compile(r'\[\[(.*?)\]\]')
+        for d in self.docs:
+            d.modals = []
+            m = reg.findall(d.content)
+            if m:
+                #print(m)
+                for match in m:
+                    w = self.WikilinkModal(''.join(match), self.docs, d)
+                    d.modals.append(w)
+                    if len(w.docs) != 0:
+                        apply = '''<a onclick="document.getElementById('{0}').style.display='block'"">{1}</a>'''.format(
+                            w.id, w.name)
+                        d.content = d.content.replace(
+                            "[[" + w.name + "]]", "[[" + apply + "]]")
 
-        for f in files:
-            path = path_out.joinpath(f.name)
-            shutil.copy(str(f), str(path))
+        # build home page
+        self.homepage = self.parse(self.homepage_md)
+        self.homepage.template = self.template_homepage
+        self.homepage.path = self.out_folder
+
+    def write(self):
+        #write pages
+        for f in self.folders:
+            self.writePage(f)
+
+        #write homepage
+        self.writePage(self.homepage)
+        self.process_image_folder()
 
     def writePage(self, page):
-        if page.path.exists() == False: page.path.mkdir(parents=True, exist_ok=True)
+        if page.path.exists() == False:
+            page.path.mkdir(parents=True, exist_ok=True)
         page.path = page.path / "index.html"
-        jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(self.templates))
+        jinja_env = jinja2.Environment(
+            loader=jinja2.FileSystemLoader(self.templates))
         template = jinja_env.get_template(page.template)
         rendered = template.render(page=page, garden=self)
         page.path.write_text(rendered, encoding='utf8')
-    
 
-    class Homepage:
-        def __init__(self, Garden):
-            self.title = Garden.site_name
-            self.template = Garden.template_homepage
-            self.path = pathlib.Path(Garden.out_folder)
-            if "http" in Garden.css: self.css = Garden.css
-            else: self.css = "." + Garden.css
-            
-            if Garden.displayIndexmd == True:
-                with open("index.md", "r", encoding='utf-8') as f:
-                    self.content = markdown(f.read(),extensions=[FigureCaptionExtension(), WikiBrackets(), UrlizeExtension()])
-                    #messy hack to make extension produced links work on homepage
-                    self.content = self.content.replace('<a href="../', '<a href="./')
-            
-            self.TopicSection = []
-            Garden.topicsList.sort(reverse=False)
-            for t in Garden.topicsList:
-                self.TopicSection.append('<a href="{path}">{name}</a>'.format(path="./topics/"+t.replace(" ","_")+"/", name=t))
-            
-            self.new = []
-            for p in Garden.pages_by_date[0:5]:
-                self.new.append('<p><a href="{path}">{name}</a> <i>{date}</i></p>'.format(path="./"+p.name, name=p['title'], date=p['date']))
-            
+    def find_images(self, lines):
+        lines = str(lines)
+        found = []
 
-    class Topicpage:
-        def __init__(self, name, Garden):
-            self.name = name    
-            self.title = name.title()   
-            self.template = Garden.template_topic                  
-            self.path = pathlib.Path(Garden.out_folder) / "topics" / str(self.name).replace(" ", "_") 
-            
-            if "http" in Garden.css: self.css = Garden.css
-            else: self.css = "../.." + Garden.css
-            self.content = []
-            for p in Garden.pages_by_date :
-                if name in p.topics:
-                    self.content.append('<p><a href="{path}">{name}</a> <i>{date}</i></p>'.format(path="../../"+p.name, name=p['title'], date=p['date']))
-            
-            
+        found = re.findall(r'src="(.*?)"', lines)
+        return found
+
+    class Folder:
+        def __init__(self, path):
+            self.name = path.stem
+            self.title = self.name.title()
+            self.url = urllib.parse.quote_plus(str(path.stem))
+            self.docs = []
+            #self.template = Garden.template_topic
+
+    class WikilinkModal:
+        def __init__(self, name, docs, source):
+            self.name = name
+            self.docs = []
+            self.id = "modal" + name.replace(" ", "").lower()
+
+            for d in docs:
+                #print(name)
+                if d.title != source.title:
+                    if " " + name + "s" in d.RAW and d not in self.docs:
+                        #print(d.name)
+                        self.docs.append(d)
+                    if " " + name + " " in d.RAW and d not in self.docs:
+                        #print(d.name)
+                        self.docs.append(d)
+                    if "[[" + name + "]]" in d.RAW and d not in self.docs:
+                        #print(d.name)
+                        self.docs.append(d)
+                    if name.lower() in d.title.lower() and d not in self.docs:
+                        self.docs.append(d)
+
+
 if __name__ == "__main__":
-    g = Garden()
-    g.parse()
+    g = Garden('config.yml')
     g.build()
 
+    g.write()
