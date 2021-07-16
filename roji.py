@@ -85,8 +85,6 @@ class Garden:
         # parse folders
         self.folders = []
 
-        #self.docs = []
-
         #folder loop
         for f in self.md_files.glob('*'):
             if f.is_dir and self.img_folder != f:
@@ -175,19 +173,11 @@ class Garden:
             self.id = "modal" + name.replace(" ", "").lower()
 
             for d in docs:
-                #print(name)
                 if d.title != source.title:
-                    if " " + name + "s" in d.RAW and d not in self.docs:
-                        #print(d.name)
+                    #keep matches simple:
+                    if name.lower() in d.RAW.lower():
                         self.docs.append(d)
-                    if " " + name + " " in d.RAW and d not in self.docs:
-                        #print(d.name)
-                        self.docs.append(d)
-                    if "[[" + name + "]]" in d.RAW and d not in self.docs:
-                        #print(d.name)
-                        self.docs.append(d)
-                    if name.lower() in d.title.lower() and d not in self.docs:
-                        self.docs.append(d)
+
 
 
 if __name__ == "__main__":
