@@ -1,160 +1,60 @@
+{% macro sentence_case(text) %} {{ text[0]|upper}}{{text[1:] }} {% endmacro %}
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8" />
-<title>{{page.title}}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <meta charset="utf-8" />
+  <title>{{folder.title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <script src="../assets/scripts.js"></script>
+  <meta name="description" content="{{garden.description}}" />
+  <meta name="keywords" content="{{garden.keywords}}" />
+  <meta name="author" content="{{garden.author}}" />
+  <body onload="boot()">
+    <header><h6>{{garden.title}}</h6></header>
 
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
-<meta name="description" content="{{garden.description}}">
-<meta name="keywords" content="{{garden.keywords}}">
-<meta name="author" content="{{garden.author}}">
-<style>
-  body {
-    font-family: 'Jost', sans-serif;
-    line-height: 2.5;
-
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: 'Zilla Slab', monospace;
-    letter-spacing: +0.02em;
-    word-spacing: -0.1em;
-    line-height: 2em;
-  }
-
-  .w3-content a {
-    text-decoration: none;
-    box-shadow: inset 0 -6px 0 rgba(123, 255, 0, 0.719);
-  }
-
-  .w3-content a:hover {
-    text-decoration: none;
-    background-color: rgba(123, 255, 0, 0.719);
-
-  }
-
-  .menu a {
-    font-family: 'Zilla Slab', monospace;
-    text-decoration: none;
-    box-shadow: none;
-  }
-
-  .title {
-    font-family: 'Zilla Slab', monospace;
-    letter-spacing: -0.05em;
-    font-weight: 400;
-    text-decoration: none;
-    box-shadow: none;
-    line-height: 1.5;
-  }
-
-  hr {
-    border-top: 2px dotted rgb(51, 51, 51);
-  }
-</style>
-
-<body>
-
-
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="Menu">
-    <button onclick="closeMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
-
-    <ul class="w3-ul no-dec">
-      <li><a href="{{garden.siteurl}}">$HOME</a></li>
-      {% for doc in page.docs_by_date%}
-      <li><a href="#{{doc.url}}">{{doc.title}}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-
-
-
-  <div class="w3-bar w3-padding w3-xlarge" style="text-decoration: none;">
-    <a class="title" id="top" href="{{garden.siteurl}}">{{garden.title}}</a>
-    <button class=" w3-button w3-right " onclick="openMenu()">&#9776;</button>
-  </div>
-
-  <div class="w3-content" style="">
-   <!-- DIR of page -->
-    <ul class="w3-ul w3-small w3-margin-bottom w3-monospace">
-      <li><a href="{{garden.siteurl}}">$HOME</a> / {{page.title}} / </li>
-      {% for doc in page.docs_by_date%}
-      <li><a href="#{{doc.url}}">{{doc.title}}</a></li>
-      {% endfor %}
-    </ul>
+    <!-- DIR of page -->
+    <nav>
+      <ul>
+        <li><a href="{{garden.siteurl}}">$HOME</a> / {{folder.title}} /</li>
+        {% for note in folder.notesbydate%}
+        <li><a href="#{{note.url}}">{{note.fmatter.title}}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
 
     <!-- doc -->
-    {% for doc in page.docs_by_date%}
-    <div class="w3-container" style="margin-bottom: 3em;">
+    {% for note in folder.notesbydate%}
+    <article>
+      <a id="{{note.url}}" href="#{{note.url}}">
+        <h1>{{note.fmatter.title}}</h1>
+      </a>
 
+      {{note.HTML}} {% if note.wikilinks %}
+      <h3 id="{{note.url}}Notes">↳ Connections</h3>
 
-      <div class="" style="">
-        <a id="{{doc.url}}" href="{{doc.fullurl}}">
-          <h2 class="w3-bottombar w3-border-gark-grey " style="">{{doc.title}}</h2>
-        </a>
-      </div>
+      {% for wiki in note.wikilinks%}
+      <p>{{wiki}} mentioned in: 
+          {% for note in garden.search_notes(wiki, note)%}
+       
+        <a href="{{note.url}}">{{note.fmatter['title']}}</a>
+      </p>
+      {% endfor %}{% endfor %}
+     
 
-       <!-- MODALS of page -->
-      {% for modal in doc.modals %}
-      <div id="{{modal.id}}" class="w3-modal">
-        <div class="w3-modal-content w3-card">
-          <header class="w3-container"> 
-            <span onclick="document.getElementById('{{modal.id}}').style.display='none'" 
-            class="w3-button w3-display-topright">&times;</span>
-            <h2>{{modal.name}} is mentioned in:</h2>
-          </header>
-          <div class="w3-container">
-            {% for doc in modal.docs%}
-            <p class="w3-monospace">/ {{doc.folder}} / <a href="{{doc.fullurl}}">{{doc.title}}</a></p>
-            {% endfor %}
-          </div>
-
-
-          <footer class="w3-container w3-black">
-            <p onclick="document.getElementById('{{modal.id}}').style.display='none'" >ＣＬＯＳＥ</p>
-          </footer>
-        </div>
-      </div>
-      {% endfor %}
-
-      {{doc.content}}
-      <div class="w3-panel w3-leftbar w3-monospace w3-small "># ./{{doc.filename}} | {{doc.date}} {% if doc.updated is
-        defined %}| Updated {{doc.updated}}{% endif %}</div>
-      <hr>
-      <p class="w3-small w3-monospace"><a href="#top">Back to top</a></p>
-
-
-
-    </div>
-
+      {% endif %}
+      <footer>
+        # ./{{note.filename}} | {{note.fmatter.date}} {% if note.fmatter.updated
+        is defined %}| Updated {{note.updated}}{% endif %}
+      </footer>
+      <hr />
+      <p class=""><a href="#top">Back to top</a></p>
+    </article>
 
     {% endfor %}
 
-
-  </div>
-
-  <!-- footer -->
-  <div class="w3-container w3-light-grey w3-border-top w3-border-dark-grey w3-margin-top w3-padding-top">
-    <p class="w3-right">{{garden.footer}} {{garden.email}}</p>
-  </div>
-
-  <script>
-    function openMenu() {
-      document.getElementById("Menu").style.display = "block";
-    }
-
-    function closeMenu() {
-      document.getElementById("Menu").style.display = "none";
-    }
-
-  </script>
-
-</body>
-
+    <!-- footer -->
+    <footer>
+      <p>{{garden.footer}} </br>📧 {{garden.email}}.</p>
+    </footer>
+  </body>
 </html>

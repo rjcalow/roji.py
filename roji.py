@@ -1,187 +1,197 @@
 import yaml
-import re
-import pathlib
-import frontmatter
-import jinja2
-import urllib.parse
 from datetime import datetime
-import shutil
-import markdown
-from mdx_extensions.mdx_urlize import UrlizeExtension
+import urllib
+import frontmatter
+import pathlib
+import markdown 
+import re 
+import jinja2
+
+from img_process import *
 from mdx_extensions.figureAltCaption import FigureCaptionExtension
-from mdx_extensions.mdx_truly_sane_lists import TrulySaneListExtension
-import PIL
-from PIL import Image
+from mdx_extensions.mdx_urlize import UrlizeExtension
 
-
-class Garden:
-
+class DigitalGarden:
     def __init__(self, configfile):
         self.gen_date = datetime.today().strftime('%d/%m/%Y')
+        
         # open w/ utf8 so emojis can be stored in yaml tags
         with open(configfile, "r", encoding='utf-8') as f:
             config = yaml.load(f, Loader=yaml.SafeLoader)
 
         for key in config:
             setattr(self, key, config[key])
-
+        
         self.md_files = pathlib.Path(self.markdown_folder)  # markdown files
         self.img_folder = pathlib.Path(self.img_folder)
         self.out_folder = pathlib.Path(self.out_folder)
         self.homepage_md = pathlib.Path(self.homepage_md)
-        self.images = []  # images in docs
-        self.docs = []  # global store of docs for homepage
+        self.jinja = jinja2.Environment(loader=jinja2.FileSystemLoader(self.templates))
+        self.template_page = self.jinja.get_template(self.template_page)
+        self.template_home = self.jinja.get_template(self.template_homepage)
+        self.assets = pathlib.Path(self.template_assets)
 
-    def parse(self, path):
-        try:
-            page = frontmatter.load(str(path), encoding='utf-8')
-            page.filename = path.name
-            page.name = path.stem
-            page.url = urllib.parse.quote_plus(str(path.stem))
-            page.RAW = page.content  # unconverted markdown
-            page.content = markdown.markdown(page.content, extensions=[
-                                             UrlizeExtension(), TrulySaneListExtension(), FigureCaptionExtension(), 'tables'])
-            page.images = self.find_images(page.content)
-            for i in page.images:
-                self.images.append(i.split("/")[-1])
-            page.title = str(page['title']).title()
-
-            for html in self.html_changes:
-                page.content = page.content.replace(
-                    html['replace'], html['apply'])
-
-            return page
-
-        except Exception as e:
-            print(e)
-
-    def process_image_folder(self):
-        images = self.img_folder.glob('*')
-
-        imagefolder = self.out_folder / "imgs"
-
-        if imagefolder.exists() == False:
-            imagefolder.mkdir(parents=False, exist_ok=True)
-
-        for f in images:
-            process_path = imagefolder / f.name
-
-            if process_path.exists == True:
-                continue
-            if f.name in self.images:  # and process_path.exists == False:
-                # https://gist.github.com/tomvon/ae288482869b495201a0
-                mywidth = 1000
-
-                img = Image.open(f)
-                if img.width > mywidth and f.suffix != ".gif":
-                    wpercent = (mywidth/float(img.size[0]))
-                    hsize = int((float(img.size[1])*float(wpercent)))
-                    img = img.resize((mywidth, hsize), PIL.Image.ANTIALIAS)
-                    img.save(str(process_path))
-                else:
-                    shutil.copy(str(f), str(process_path))
-
-    def build(self):
-        # parse folders
         self.folders = []
-
-        #folder loop
         for f in self.md_files.glob('*'):
             if f.is_dir and self.img_folder != f:
-                F = self.Folder(f)  # folder class
+                self.folders.append(self.Folder(f))
 
-                #folder file loop
-                for doc in f.glob('*.md'):
-                    p = self.parse(doc)
-                    p.folder = str(f.name)
-                    p.fullurl = self.siteurl + "/" + \
-                        urllib.parse.quote_plus(
-                            f.name) + "#" + urllib.parse.quote_plus(p.name)
-
-                    F.docs.append(p)
-                    self.docs.append(p)
-
-                F.docs_by_date = sorted(F.docs, key=lambda doc: datetime.strptime(
-                    doc['date'], "%d/%m/%Y"), reverse=True)
-                F.path = self.out_folder / F.url
-                F.template = self.template_page
-                self.folders.append(F)
-
-        #all docs for homepage
-        self.docs = sorted(self.docs, key=lambda doc: datetime.strptime(
-            doc['date'], "%d/%m/%Y"), reverse=True)
-
-        # wiki links
-        reg = re.compile(r'\[\[(.*?)\]\]')
-        for d in self.docs:
-            d.modals = []
-            m = reg.findall(d.content)
-            if m:
-                #print(m)
-                for match in m:
-                    w = self.WikilinkModal(''.join(match), self.docs, d)
-                    d.modals.append(w)
-                    if len(w.docs) != 0:
-                        apply = '''<a onclick="document.getElementById('{0}').style.display='block'"">{1}</a>'''.format(
-                            w.id, w.name)
-                        d.content = d.content.replace(
-                            "[[" + w.name + "]]", "[[" + apply + "]]")
-
-        # build home page
-        self.homepage = self.parse(self.homepage_md)
-        self.homepage.template = self.template_homepage
-        self.homepage.path = self.out_folder
-
-    def write(self):
-        #write pages
+    def cultivate(self):
+        ''' 
+        #################
+         markdown > HTML
+        #################
+        '''
         for f in self.folders:
-            self.writePage(f)
+            render = self.template_page.render(folder=f, folders=self.folders, garden=self)
+            
+            dir = self.out_folder / f.url  
+            
 
-        #write homepage
-        self.writePage(self.homepage)
-        self.process_image_folder()
+            if dir.exists() == False:
+                dir.mkdir(parents=True, exist_ok=True)
+            
+            fullpath = dir / "index.html"
+            
+            fullpath.write_text(render, encoding='utf8')
 
-    def writePage(self, page):
-        if page.path.exists() == False:
-            page.path.mkdir(parents=True, exist_ok=True)
-        page.path = page.path / "index.html"
-        jinja_env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(self.templates))
-        template = jinja_env.get_template(page.template)
-        rendered = template.render(page=page, garden=self)
-        page.path.write_text(rendered, encoding='utf8')
+        ''' 
+        ##########
+         homepage
+        ##########
+        '''
+        homepage = frontmatter.load(str(self.homepage_md), encoding='utf-8')
+        homepageHTML= markdown.markdown(homepage.content, extensions=[
+                    'tables', 'fenced_code', UrlizeExtension()])
+        render = self.template_home.render(homepage=homepageHTML, garden=self)
+        fullpath = self.out_folder / "index.html"
+        fullpath.write_text(render, encoding='utf8')
 
-    def find_images(self, lines):
-        lines = str(lines)
-        found = []
+        ''' 
+        ########
+         images
+        ########
+        '''
+        img_out_folder = self.out_folder / "imgs"
+        if img_out_folder.exists() == False:
+            img_out_folder.mkdir(parents=False, exist_ok=True)
 
-        found = re.findall(r'src="(.*?)"', lines)
-        return found
+        for img in self.img_folder.glob('*'):
+            #print(img_out_folder / img.name)
+            # loop to check if file used in md files
+            # not great but my note image folder is a mess
+            for f in self.folders:
+                for n in f.notes:
+                    for i in n.imgs:
+                        if img.name == i.filename:             
+                            IMG_process(1000, img, img_out_folder / img.name )
+                            break
+        ''' 
+        #################
+         template assets
+        #################
+        '''
+        asset_out_folder = self.out_folder / "assets"
+        if asset_out_folder.exists() == False:
+            asset_out_folder.mkdir(parents=False, exist_ok=True)
+        
+        for f in self.assets.glob('*'):
+            outpath = asset_out_folder / f.name
+            shutil.copy(str(f), str(outpath))
+
+
+    def notes_by_date(self):
+        ''' called by jinja2 for a list of ALL notes by date for index'''
+        notes_ = []
+        for f in self.folders:
+            for n in f.notes:
+                notes_.append(n)
+        
+        notesbydate = sorted(notes_, key=lambda note: datetime.strptime(
+            note.fmatter['date'], "%d/%m/%Y"), reverse=True)
+        return notesbydate
+
+    def search_notes(self, term, source):
+        #print (term)
+        results = []
+        term = term.lower()
+        for n in self.notes_by_date():
+            if n.fmatter['title'] != source.fmatter['title']:
+                r = re.findall(term.lower(), n.fmatter.content.lower() + " " + n.fmatter['title'].lower())
+                
+                if r and n not in results:
+                    results.append(n)
+
+
+        return results
+    
+
 
     class Folder:
-        def __init__(self, path):
-            self.name = path.stem
-            self.title = self.name.title()
-            self.url = urllib.parse.quote_plus(str(path.stem))
-            self.docs = []
-            #self.template = Garden.template_topic
+            def __init__(self, path):
+                self.path = path
+                self.name = str(path.stem)
+                self.title = self.name.title()
+                self.url = urllib.parse.quote_plus(str(path.stem))
+                self.writepath = self.name 
+                self.notes = []
 
-    class WikilinkModal:
-        def __init__(self, name, docs, source):
-            self.name = name
-            self.docs = []
-            self.id = "modal" + name.replace(" ", "").lower()
+                for f in self.path.glob("*.md"):
+                    self.notes.append(self.Note(f, self.url))
+                
+                self.notesbydate = []
+                self.notesbydate = sorted(self.notes, key=lambda note: datetime.strptime(
+                    note.fmatter['date'], "%d/%m/%Y"), reverse=True)
 
-            for d in docs:
-                if d.title != source.title:
-                    #keep matches simple:
-                    if name.lower() in d.RAW.lower():
-                        self.docs.append(d)
+    
+            class Note:
+                def __init__(self, path, folderrul):
+                    #parse
+                    self.fmatter = frontmatter.load(str(path), encoding='utf-8')
+                    self.date = datetime.strptime(self.fmatter['date'], "%d/%m/%Y")
+                    self.filename = path.name
+                    self.folderurl = folderrul
+                    self.url = urllib.parse.quote_plus(str(path.stem))
+                    self.HTML = markdown.markdown(self.fmatter.content, extensions=[
+                    'tables', 'fenced_code',  FigureCaptionExtension(), UrlizeExtension()])
+                    
+                    
+                    #imgs
+                    self.imgs = []
+                    for i in re.findall(r'src="(.*?)"', self.HTML ):
+                        ext =(".jpg", ".jpeg", ".png",".gif")
+                        if i.endswith(ext) == True:
+                            self.imgs.append(self.Img(i))
+                    
+                    #wiki links
+                    self.wikilinks = []
+                    reg = re.compile(r'\[\[(.*?)\]\]')
+                    links = reg.findall(self.HTML)
+                    if links:
+                        for l in links:
+                            t = f'<a href="#{self.url}Notes">{l}</a>'
+                            self.HTML = self.HTML.replace(f"[[{l}]]", t)
+                            #print(l)
+                            
+                            if l.lower() not in self.wikilinks: 
+                                self.wikilinks.append(l.lower())
+                                
+
+                    else:
+                        self.wikilinks = None
 
 
+                class Img:
+                    def __init__(self, src):
+                        self.src = src
+                        if "/" in src:
+                            self.filename = src.split("/")[-1] 
+                        else:
+                            self.filename = src
 
-if __name__ == "__main__":
-    g = Garden('config.yml')
-    g.build()
+                    
 
-    g.write()
+                       
+
+g = DigitalGarden('config.yml')
+g.cultivate()

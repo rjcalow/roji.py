@@ -1,130 +1,43 @@
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8" />
-<title>{{garden.title}}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <meta charset="utf-8" />
+  <title>{{garden.title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="assets/scripts.js"></script>
+  <meta name="description" content="{{garden.description}}" />
+  <meta name="keywords" content="{{garden.keywords}}" />
+  <meta name="author" content="{{garden.author}}" />
 
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
-<meta name="description" content="{{garden.description}}">
-<meta name="keywords" content="{{garden.keywords}}">
-<meta name="author" content="{{garden.author}}">
-<style>
-  body {
-    font-family: 'Jost', sans-serif;
-    line-height: 2.8;
+  <body onload="boot()">
+    <header><h6>{{garden.title}}</h6></header>
 
-  }
+    {{homepage}} {% for folders in garden.folders | batch(3, '&nbsp;') %} {% for
+    f in folders %} {% if f.url is defined %}
+    <a class="button" style="" href="./{{f.url}}">{{f.title}}</a>
+    {% else %} &nbsp; {% endif %} {% endfor %} {% endfor %}
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: 'Zilla Slab', monospace;
-    letter-spacing: +0.02em;
-    word-spacing: -0.1em;
-  }
+    <p>All notes by date.</p>
+    {% for note in garden.notes_by_date()%}
+    <p>
+      <a href="{{note.folderurl}}#{{note.url}}">{{note.fmatter['title']}}</a>
+      <code>{{note.fmatter['date']}}</code>
+    </p>
+    {% endfor %}
 
-  .w3-content a {
-    text-decoration: none;
-    box-shadow: inset 0 -6px 0 rgba(123, 255, 0, 0.719);
-  }
-
-  .w3-content a:hover {
-    text-decoration: none;
-    background-color: rgba(123, 255, 0, 0.719);
-
-  }
-
-  .menu a {
-    font-family: 'Zilla Slab', monospace;
-    text-decoration: none;
-    box-shadow: none;
-  }
-
-  .title {
-    font-family: 'Zilla Slab', monospace;
-    letter-spacing: -0.05em;
-    font-weight: 400;
-    text-decoration: none;
-    box-shadow: none;
-    line-height: 1.5;
-  }
-</style>
-
-<body>
-
-  <!-- sidebar -->
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="Menu">
-    <button onclick="closeMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
-
-    <ul class="w3-ul no-dec">
-      <li><a href="{{garden.siteurl}}">$HOME</a></li>
-      {% for folder in garden.folders %}
-      <li><a href="{{garden.siteurl}}/{{folder.url}}">{{folder.title}}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
+    <h3>⚙️ Garden Settings</h3>
+    <h4>Mode preference</h4>
+    <button onclick="change_mode('lightmode');">☀️</button>
+    <button onclick="change_mode('darkmode');">🌔</button>
+    <h4>Font preference</h4>
+    <button onclick="change_font('serif');">Serif</button>
+    <button onclick="change_font('sansserif');">Sans-serif</button>
+    <button onclick="change_font('monospace');">Monospace</button>
 
 
-  <!-- bar -->
-  <div class="w3-bar w3-padding w3-xlarge" style="text-decoration: none;">
-    <a class="title" id="top" href="{{garden.siteurl}}">{{garden.title}}</a>
-    <button class=" w3-button w3-right " onclick="openMenu()">&#9776;</button>
-  </div>
-
-
-  <!-- content -->
-  <div class="w3-container w3-content  w3-section w3-margin-top w3-margin-bottom " style="max-width:1600px; margin-bottom: 4em;">
-    {{page.content}}
-    <div class="w3-row-padding menu w3-margin-top w3-margin-bottom">
-
-      {% for folders in garden.folders | batch(3, '&nbsp;') %}
-
-      {% for f in folders %}
-
-      {% if f.url is defined %}
-      <a class="w3-third w3-padding-large w3-xlarge w3-button w3-block w3-light-grey w3-border-white   w3-border "
-        style="" href="./{{f.url}}">{{f.title}}</a>
-      {% else %}
-      &nbsp;
-      {% endif %}
-      {% endfor %}
-
-
-      {% endfor %}
-    </div>
-
-    <div class="w3-container ">
-      <h3>All Notes</h3>
-      <div class="" style="">
-        <p>CTRL + F for search</p>
-        {% for doc in garden.docs %}
-        / {{doc.folder}} / <a href="{{doc.fullurl}}">{{doc.title}}</a> {{doc.date}} {{doc.emoji}}<br> 
-  
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-  <!-- footer -->
-  <div class="w3-container w3-bottom w3-light-grey w3-border-top w3-border-dark-grey w3-margin-top w3-padding-top">
-    <p class="w3-right">{{garden.footer}} {{garden.email}}</p>
-  </div>
-
-  <script>
-
-    function openMenu() {
-      document.getElementById("Menu").style.display = "block";
-    }
-
-    function closeMenu() {
-      document.getElementById("Menu").style.display = "none";
-    }
-
-  </script>
-
-</body>
-
+    <!-- footer -->
+    <footer>
+      <p>{{garden.footer}} </br>📧 {{garden.email}}.</p>
+    </footer>
+  </body>
 </html>
