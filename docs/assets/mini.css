@@ -1,0 +1,186 @@
+/* shity mini css inspired by https://bestmotherfucking.website/ 
+
+*/
+body {
+  margin: 5% auto;
+  padding: 0 2%;
+  background: #f2f2f2;
+  color: #444444;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  text-shadow: 0 1px 0 #ffffff;
+  max-width: 70em;
+}
+
+header details ul {
+  float: left;
+}
+header details {
+  margin-top:1em;
+  width: auto;
+}
+
+header details:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+header {
+  margin-bottom: 1em;
+}
+
+main details {
+  /*! display:block; */
+  /*! float:none; */
+}
+.gist,
+code,
+blockquote,
+pre {
+  background: white;
+  width: 80%;
+  margin: 0.5em auto;
+  padding: 0.5em;
+  border-radius: 10px;
+}
+a {
+  border-bottom: 1px solid lightgray;
+  color: #444444;
+  text-decoration: none;
+}
+a:hover {
+  border-bottom: 0;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.3em;
+}
+/* text body */
+article {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 4em;
+  margin-bottom: 4em;
+}
+
+.articlebody {
+  width: 100%;
+  max-width: 65ch; /* remove this and go full flex */
+  flex: 2;
+}
+/* sidebar */
+aside {
+  margin-top: 4em;
+  text-align: left;
+  flex: 1;
+  align-items: right;
+  justify-content: right;
+  max-width: 40ch; /* remove this and go full flex */
+}
+aside h4 {
+  padding: 0;
+  margin: 0;
+}
+aside ul {
+  align-items: right;
+  justify-content: right;
+  list-style: none;
+  margin-bottom: 1em;
+  text-align: left;
+  padding-left: 0;
+}
+aside ul li {
+  display: inline;
+}
+
+main details ul li {
+  margin-left:2em;/*! remove? */
+}
+
+mark,
+.highlighted {
+  background: lightgray;
+  color: black;
+  text-shadow: None;
+}
+
+/* IMAGES */
+figure {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  object-fit: contain;
+  margin-bottom: 1.5em;
+}
+img {
+  width: 80%;
+  max-height: 60vh;
+
+  object-fit: contain;
+}
+
+pre,
+code {
+  word-break: break-word; /*! width: 80%; */
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+#about {
+  display: none;
+  transition: all 0.5s ease;
+  max-width: 50ch;
+}
+#about:target {
+  display: block;
+}
+
+hr {
+  width: 100%;
+  border-style: solid;
+  border-color: lightgray;
+  border-width: 1px 0 0 0;
+  margin: 1em 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 2em 0 0 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 799px) {
+  body {
+    max-width: 95%;
+  }
+  article {
+    flex-direction: column;
+    gap:0;
+  }
+  .articlebody {
+    
+  }
+  aside {
+    padding: 0;
+
+    margin-top: 0;
+  }
+  header details ul {
+    margin: 0;
+    float: none;
+  }
+}

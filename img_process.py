@@ -13,6 +13,13 @@ def IMG_process(width, source, path_to_save):
         wpercent = (width/float(img.size[0]))
         hsize = int((float(img.size[1])*float(wpercent)))
         img = img.resize((width, hsize), PIL.Image.ANTIALIAS)
-        img.save(str(path_to_save))
+        img.save(str(path_to_save),optimize=True, quality = 60)
+        
+    elif  (source.stat().st_size / 1024) > 200: 
+        wpercent = (width/float(img.size[0]))
+        hsize = int((float(img.size[1])*float(wpercent)))
+        img = img.resize((width, hsize), PIL.Image.ANTIALIAS)
+        img.save(str(path_to_save),optimize=True, quality = 50)
+
     else:
         shutil.copy(str(source), str(path_to_save))

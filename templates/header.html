@@ -1,0 +1,19 @@
+      <header>
+        <a href="{{garden.siteurl}}">{{garden.title}}</a>
+        <a href="{{garden.siteurl}}#about">about</a> <a href="{{garden.siteurl}}/log">log</a>
+        <a href="{{garden.siteurl}}/search">search</a>
+
+        <details id="index" {% if content is defined %}open=""{%endif%}>
+          <summary>./index</summary>
+          {% for folders in garden.folders | batch(4, '') %} {% for f in folders
+          %} {% if loop.index == 1 %}
+          <ul>
+            {%endif%} {% if f %}
+            <li>
+              <a href="{{garden.siteurl}}/{{f.url}}">{{lower_case(f.title)}}</a>
+            </li>
+            {% endif %} {% if loop.last %}
+          </ul>
+          {%endif%}{% endfor%}{% endfor%}
+        </details>
+      </header>

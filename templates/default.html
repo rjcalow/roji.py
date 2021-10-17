@@ -1,60 +1,125 @@
-{% macro sentence_case(text) %} {{ text[0]|upper}}{{text[1:] }} {% endmacro %}
+{% macro sentence_case(text) %} {{ text[0]|upper}}{{text[1:]}}{% endmacro %} {%
+macro lower_case(text) %}{{text[0]|lower}}{{text[1:]}}{% endmacro %} {% macro
+level() %}{% for f in range(1, folder.folderlevel + 1)%}../{% endfor %}{%
+endmacro %}
+
 <!DOCTYPE html>
 <html>
   <meta charset="utf-8" />
   <title>{{folder.title}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="../assets/style.css" />
-  <script src="../assets/scripts.js"></script>
+
+  <link rel="stylesheet" href="{{level()}}../assets/mini.css" />
+
   <meta name="description" content="{{garden.description}}" />
   <meta name="keywords" content="{{garden.keywords}}" />
   <meta name="author" content="{{garden.author}}" />
-  <body onload="boot()">
-    <header><h6>{{garden.title}}</h6></header>
 
-    <!-- DIR of page -->
-    <nav>
-      <ul>
-        <li><a href="{{garden.siteurl}}">$HOME</a> / {{folder.title}} /</li>
-        {% for note in folder.notesbydate%}
-        <li><a href="#{{note.url}}">{{note.fmatter.title}}</a></li>
+  <body>
+    <div class="container">
+      {% include 'header.html' %}
+
+      <main>
+        {# note menu #} {% if folder.notes | length > 0 %}
+        <details id="notes" class="rcorner" open="">
+          {% else %}
+          <details id="notes" open="">
+            {%endif%}
+
+            <summary>
+              ./{% for f in folder.parents%}<a
+                href="{{garden.siteurl}}/{{f.fullurl}}"
+                >{{lower_case(f.title)}}</a
+              >/{% endfor %}{{lower_case(folder.title)}}
+            </summary>
+            <ul>
+              {% for note in folder.notesbydate%}
+              <li class="note">
+                <a href="#{{note.url}}">{{note.fmatter.title}}</a>
+              </li>
+              {% endfor %}
+            </ul>
+
+            {% if folder.children %} {% for f in folder.children%}
+            <ul>
+              <p>
+                ./{% for p in f.parents%}{{lower_case(p.title)}}/{% endfor %}<a
+                  href="./{{f.url}}"
+                  >{{lower_case(f.title)}}</a
+                >
+              </p>
+
+              {%for note in f.notesbydate %}
+              <li>
+                <a href="../{{note.folderurl}}#{{note.url}}"
+                  >{{note.fmatter.title}}</a
+                >
+              </li>
+
+              {% endfor%}
+            </ul>
+            {% endfor %} {% endif %} {% if folder.notes | length > 0 %}
+          </details>
+          {% else %}
+        </details>
+        {%endif%}
+
+        <!-- doc -->
+
+        {%if folder.about is defined %}
+        <p><i>{{folder.about}}</i></p>
+        {%endif%} {% for note in folder.notesbydate%}
+
+        <article id="{{note.url}}">
+          <div class="column articlebody">
+            <h1>
+              <a id="{{note.url}}" href="#{{note.url}}"
+                >{{note.fmatter.title}}</a
+              >
+            </h1>
+
+            {{note.HTML}}
+          </div>
+
+          <!-- sidebar -->
+          <aside class="column">
+            <!-- note footer -->
+            <footer>
+              <h5>Meta</h5>
+              {% if note.fmatter.updated is defined %}
+              <p>Update: {{note.fmatter.updated}}</p>
+              {% endif %}
+              <p>Date: {{note.fmatter.date}}</p>
+              <p>Source: ./{{folder.fullurl}}{{note.filename}}</p>
+            </footer>
+
+            <!-- backlinks -->
+            {% if note.wikilinks|length > 0 %}
+
+            <h5>Backlinks</h5>
+            {% for link in note.wikilinks%}
+            <ul>
+              {{sentence_case(link.name)}}:{% for note in link.notes%}
+              <li>
+                <a href="{{garden.siteurl}}/{{note.folderurl}}#{{note.url}}"
+                  >{{note.title}}</a
+                >
+              </li>
+
+              {% endfor %}
+            </ul>
+
+            {% endfor %}
+          </aside>
+          <!-- sidebar END-->
+          {% endif %}
+        </article>
+
         {% endfor %}
-      </ul>
-    </nav>
+      </main>
 
-    <!-- doc -->
-    {% for note in folder.notesbydate%}
-    <article>
-      <a id="{{note.url}}" href="#{{note.url}}">
-        <h1>{{note.fmatter.title}}</h1>
-      </a>
-
-      {{note.HTML}} {% if note.wikilinks %}
-      <h3 id="{{note.url}}Notes">↳ Connections</h3>
-
-      {% for wiki in note.wikilinks%}
-      <p>{{wiki}} mentioned in: 
-          {% for note in garden.search_notes(wiki, note)%}
-       
-        <a href="{{note.url}}">{{note.fmatter['title']}}</a>
-      </p>
-      {% endfor %}{% endfor %}
-     
-
-      {% endif %}
-      <footer>
-        # ./{{note.filename}} | {{note.fmatter.date}} {% if note.fmatter.updated
-        is defined %}| Updated {{note.updated}}{% endif %}
-      </footer>
-      <hr />
-      <p class=""><a href="#top">Back to top</a></p>
-    </article>
-
-    {% endfor %}
-
-    <!-- footer -->
-    <footer>
-      <p>{{garden.footer}} </br>📧 {{garden.email}}.</p>
-    </footer>
+      <!-- footer -->
+      {% include 'footer.html' %}
+    </div>
   </body>
 </html>

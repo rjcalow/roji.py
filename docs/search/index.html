@@ -1,0 +1,313 @@
+  
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8" />
+  <title>roji.py</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../assets/mini.css" />
+  <script src="../assets/scripts.js"></script>
+  <meta name="description" content="A digital sketchbook, a personal wiki, a digital garden of notes" />
+  <meta name="keywords" content="digital garden, notes" />
+  <meta name="author" content="Gardener" />
+  <script src="https://unpkg.com/lunr/lunr.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <style>
+    body {
+      transition: all 1s ease-in-out;
+    }
+    /* for lame js search page */
+    .show {
+      display: block !important;
+    }
+    .snippet {
+      display: none;
+      margin: 0;
+    }
+    #question-list-container li {
+      display: none;
+      margin: 1em;
+      padding: 5px;
+      width: 100%;
+    }
+
+    #question-list-container ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    .searchbox {
+      width: 95%;
+      margin: auto;
+    }
+
+    .searchbox input {
+      transition: width 0.4s ease-in-out;
+      width: 6em;
+      padding: 20px 12px;
+      font-family: monospace;
+      border: 1px solid lightgray;
+    }
+
+    .searchbox input:focus {
+      width: 100%;
+    }
+
+    .questions p {
+      display: inline;
+    }
+
+    main {
+      width: 95%;
+    }
+  </style>
+  <body>
+     <header>
+        <a href="https://rjcalow.github.io/roji.py">roji.py</a>
+        <a href="https://rjcalow.github.io/roji.py/#about">about</a> <a href="#">search</a> 
+        <details id="index" >
+        <summary>index</summary>
+            
+          <ul>
+             
+            <li>
+              <a href="https://rjcalow.github.io/roji.py/digital+gardens">digital gardens</a>
+            </li>
+                
+            <li>
+              <a href="https://rjcalow.github.io/roji.py/example+notes+on+film">example notes on film</a>
+            </li>
+                
+            <li>
+              <a href="https://rjcalow.github.io/roji.py/roji">roji</a>
+            </li>
+                 
+          </ul>
+           
+        </details>
+      </header>
+    <main>
+      <div class="searchbox">
+        <input
+          id="searchterm"
+          class=""
+          type="text"
+          id="sample3"
+          placeholder="🔍 Search"
+        />
+      </div>
+
+      <div class="questions">
+        <div id="question-list-container">
+          <ul>
+              
+            <li data-question-id="11">
+              <p>
+                <a href="../digital+gardens/#googleslides"
+                  > Antistatic</a
+                >
+              </p>
+              
+              <section>
+                <div class="snippet">
+                  digital gardens /  Google slides as a digital [[zine]] / digital garden.
+https://docs.google.com/presentation/d/1GWSFltGp0Qr9YKzu4cc_4eGhFcWCrzGN0zn5G0vp3mE/edit?usp=sharing
+
+A collaborative online slide deck where we collect thoughts and ideas  that need more than a tweet but less than a blog. Anyone is welcome to  view and comment. (Google Slides, ongoing, co-authored).
+
+                </div>
+              </section>
+            </li>
+               
+            <li data-question-id="21">
+              <p>
+                <a href="../example+notes+on+film/#Stalker-1979"
+                  > Stalker (1979)</a
+                >
+              </p>
+              
+              <section>
+                <div class="snippet">
+                  example notes on film /  Notes on Tarkovsky’s 1979 science fiction movie, Stalker, and [[Terrain vague]].
+
+In Stalker, {terrain vague} becomes the material embodiment of an idea—that the world around us is, ultimately, the world we think into existence and, at the same time, the world that inhabits us. What is magical in this version of terrain vague (which, as Solà-Morales suggests, is indeed “evocative”—it “calls forth”) is that people bring their world into being, so that terrain vague, in its productive indeterminacy, becomes a tangible manifestation of an otherwise suppressed or forgotten dialogue between the human being and the physical environment. (Radović, 2013)
+
+(Tarkovsky, 1979)
+
+Bibliography
+Radović, S. (2013) ‘On the Threshold: Terrain Vague as Living Space in Andrei Tarkovsky’s Stalker’, Terrain Vague, Interstices at the Edge of the Pale., pp. 114–129.
+Tarkovsky, A. (1979) Stalker. Soviet Union.
+                </div>
+              </section>
+            </li>
+            
+            <li data-question-id="22">
+              <p>
+                <a href="../example+notes+on+film/#Annihilation-2018"
+                  > Annihilation (2018)</a
+                >
+              </p>
+              
+              <section>
+                <div class="snippet">
+                  example notes on film /  Notes on Alex Garland’s 2018 science fiction movie, Annihilation, and [[Terrain vague]].
+
+
+Alex Garland’s 2018 science fiction movie, Annihilation, features an alien entity which transforms organic material in a zone called the shimmer. The shimmer  concept is similar to Andrei Tarkovsky's 1979 movie, Stalker, in which a departed alien entity has transformed corridors of space subjected to unknown extra-terrestrial laws called the Zone. 
+
+
+Like Tarkovsky’s Zone, Garlands’ Shimmer  is a [[terrain vague]] territory, one that is visually post-apocalyptic and rewilded, however, due to the extra-terrestrial, nature constantly distorts and evolves. This constant change is also applied to the characters as Garland explores, metaphorically and visually, existential crises, terminal disease, relationships and trauma through the journey in the [[Terrain vague]] landscape. 
+
+
+On the surface the film is a straightforward extra-terrestrial action horror, however, Garland, like Tarkovsky, uses the concept of [[Terrain vague]] as an uncertain representational space as a metaphorical landscape, one that reflects the protagonist and characters. The shimmer's mutating DNA plot device echoes the ambiguous terrain vague with the characters themselves becoming uncertain of who or what they are. Subtle physical attributes and traumatic experiences are shared between the characters.
+
+
+The four supporting characters succumb to the shimmer. Two are absorbed into the physical environment. In the final, the protagonist questions who they are and if they are still themselves. The existential question is at the core of the film through the terrain vague metaphor, land is representational -it reflects ourselves, culturally and socially. The shimmer and the zone are metaphorical landscape devices open to interpretation just as there many interpretations of both films.
+
+
+                </div>
+              </section>
+            </li>
+               
+            <li data-question-id="31">
+              <p>
+                <a href="../roji.py/#config"
+                  > The config</a
+                >
+              </p>
+              
+              <section>
+                <div class="snippet">
+                  roji /  Many edits can be made in the config heres a config file.
+
+author: Gardener
+email: gardener@mail.com
+title: roji.py
+#url base website.com etc
+siteurl: https://rjcalow.github.io/roji.py
+#Metadata
+description: A digital sketchbook, a personal wiki, a digital garden of notes
+keywords: digital garden, notes
+
+#HOMEPAGE 
+# use index.md for homepage content
+homepage_md: index.md
+
+# folder of templates for jinja
+templates: templates
+template_page: default.html
+template_homepage: index.html
+
+#where the markdown files are stored 
+markdown_folder: exampleMarkdown
+# image folder
+img_folder: imgs
+#where do you want your html files
+out_folder: docs
+
+footer: ☕ Brewed w/ love. Hosted on github. Built with w3.css. Generated by roji.py. 
+
+#html edits for w3css
+html_changes:
+- replace: a tag
+  apply: with this tag
+
+
+                </div>
+              </section>
+            </li>
+             
+          </ul>
+        </div>
+      </div>
+    </main>
+    <script>
+      console.clear();
+
+      var trace = console.log.bind(console);
+      var listSelector = "#question-list-container li";
+
+      var idx = lunr(function () {
+        // define searchable fields
+        this.ref("id");
+        this.field("title");
+        this.field("body");
+
+        this.k1(1.3);
+        this.b(0);
+
+        // create list of all searchable entries by reading out the
+        // '#question-list-container' and saving it as a list of json objects
+        // in this case: {id: , title: , ref: }
+        var documents = htmlElementsToJSON(listSelector, function ($element) {
+          var ref = $element.attr("data-question-id"),
+            title = $element.find("p a").text(),
+            body = $element.find("section").text();
+
+          return { id: ref, title: title, body: body };
+        });
+
+        // adding all entires to lunr
+        documents.forEach(function (doc) {
+          this.add(doc);
+        }, this);
+      });
+
+      //
+      function htmlElementsToJSON(listSelector, unmarschallFunction) {
+        // add the list elements to lunr
+        var qs = $(listSelector);
+        var entries = [];
+        for (var i = 0; i < qs.length; i++) {
+          var $q = $(qs[i]);
+          entries.push(unmarschallFunction($q));
+        }
+        return entries;
+      }
+
+      function search(searchTerm) {
+        var results = idx.search(searchTerm);
+
+        // reset(hide) all entries
+        $(listSelector).removeClass("show");
+
+        for (var i = 0; i < results.length; i++) {
+          var result = results[i];
+          $(listSelector + "[data-question-id=" + result.ref + "]").addClass(
+            "show"
+          );
+        }
+      }
+
+      function showAll(searchTerm) {
+        $(listSelector).addClass("show");
+      }
+
+      $("#searchterm").on("search paste keyup", function (event) {
+        var st = $(this).val();
+
+        // make it async, otherwise the keyboard input is interrupted
+        if (st != "") {
+          setTimeout(function () {
+            search(st);
+          }, 100);
+        }
+      });
+
+      // and show all results when clicking this button
+      //$(".all").click(function () {
+      //  showAll();
+      //});
+
+      var queryString = window.location.search;
+      queryString = queryString
+        .replaceAll("?=", "")
+        .replaceAll("+", " ")
+        .replaceAll("%20", " ");
+      $("#searchterm").val(queryString);
+      console.log(queryString);
+      if (queryString != "") {
+        search(queryString);
+      }
+    </script>
+  </body>
+</html>

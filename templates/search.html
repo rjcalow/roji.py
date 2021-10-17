@@ -1,0 +1,210 @@
+{% macro sentence_case(text) %} {{ text[0]|upper}}{{text[1:]}}{% endmacro %} {%
+macro lower_case(text) %}{{text[0]|lower}}{{text[1:]}}{% endmacro %} {% macro
+level() %}{% for f in range(1, folder.folderlevel + 1)%}../{% endfor %}{%
+endmacro %}
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8" />
+  <title>{{garden.title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../assets/mini.css" />
+  <script src="../assets/scripts.js"></script>
+  <meta name="description" content="{{garden.description}}" />
+  <meta name="keywords" content="{{garden.keywords}}" />
+  <meta name="author" content="{{garden.author}}" />
+  <script src="https://unpkg.com/lunr/lunr.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <style>
+    body {
+      transition: all 1s ease-in-out;
+    }
+    /* for lame js search page */
+    .show {
+      display: block !important;
+    }
+    .snippet {
+      display: none;
+      margin: 0;
+    }
+    #question-list-container li {
+      display: none;
+      margin: 1em;
+      padding: 5px;
+      width: 100%;
+    }
+
+    #question-list-container ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    .searchbox {
+      width: 95%;
+      margin: auto;
+    }
+
+    .searchbox input {
+      transition: width 0.4s ease-in-out;
+      width: 6em;
+      padding: 20px 12px;
+      font-family: monospace;
+      border: 1px solid lightgray;
+    }
+
+    .searchbox input:focus {
+      width: 100%;
+    }
+
+    .questions p {
+      display: inline;
+    }
+
+    main {
+      width: 95%;
+    }
+  </style>
+  <body>
+     <header>
+        <a href="{{garden.siteurl}}">{{garden.title}}</a>
+        <a href="{{garden.siteurl}}/#about">about</a> <a href="#">search</a> 
+        <details id="index" >
+        <summary>index</summary>
+          {% for folders in garden.folders | batch(4, '') %} {% for f in folders
+          %} {% if loop.index == 1 %}
+          <ul>
+            {%endif%} {% if f %}
+            <li>
+              <a href="{{garden.siteurl}}/{{f.url}}">{{lower_case(f.title)}}</a>
+            </li>
+            {% endif %} {% if loop.last %}
+          </ul>
+          {%endif%} {% endfor%}{% endfor%}
+        </details>
+      </header>
+    <main>
+      <div class="searchbox">
+        <input
+          id="searchterm"
+          class=""
+          type="text"
+          id="sample3"
+          placeholder="🔍 Search"
+        />
+      </div>
+
+      <div class="questions">
+        <div id="question-list-container">
+          <ul>
+            {% for folder in garden.allfolders %} {% set i = loop.index %} {%
+            for note in folder.notesbydate%}
+            <li data-question-id="{{i}}{{loop.index}}">
+              <p>
+                <a href="../{{note.folderurl}}#{{note.url}}"
+                  >{{sentence_case(note.fmatter.title)}}</a
+                >
+              </p>
+              {#
+              <p>javascript jquery html</p>
+              #}
+              <section>
+                <div class="snippet">
+                  {{folder.title}} / {{note.fmatter.topics}} {{note.text}}
+                </div>
+              </section>
+            </li>
+            {% endfor %} {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </main>
+    <script>
+      console.clear();
+
+      var trace = console.log.bind(console);
+      var listSelector = "#question-list-container li";
+
+      var idx = lunr(function () {
+        // define searchable fields
+        this.ref("id");
+        this.field("title");
+        this.field("body");
+
+        this.k1(1.3);
+        this.b(0);
+
+        // create list of all searchable entries by reading out the
+        // '#question-list-container' and saving it as a list of json objects
+        // in this case: {id: , title: , ref: }
+        var documents = htmlElementsToJSON(listSelector, function ($element) {
+          var ref = $element.attr("data-question-id"),
+            title = $element.find("p a").text(),
+            body = $element.find("section").text();
+
+          return { id: ref, title: title, body: body };
+        });
+
+        // adding all entires to lunr
+        documents.forEach(function (doc) {
+          this.add(doc);
+        }, this);
+      });
+
+      //
+      function htmlElementsToJSON(listSelector, unmarschallFunction) {
+        // add the list elements to lunr
+        var qs = $(listSelector);
+        var entries = [];
+        for (var i = 0; i < qs.length; i++) {
+          var $q = $(qs[i]);
+          entries.push(unmarschallFunction($q));
+        }
+        return entries;
+      }
+
+      function search(searchTerm) {
+        var results = idx.search(searchTerm);
+
+        // reset(hide) all entries
+        $(listSelector).removeClass("show");
+
+        for (var i = 0; i < results.length; i++) {
+          var result = results[i];
+          $(listSelector + "[data-question-id=" + result.ref + "]").addClass(
+            "show"
+          );
+        }
+      }
+
+      function showAll(searchTerm) {
+        $(listSelector).addClass("show");
+      }
+
+      $("#searchterm").on("search paste keyup", function (event) {
+        var st = $(this).val();
+
+        // make it async, otherwise the keyboard input is interrupted
+        if (st != "") {
+          setTimeout(function () {
+            search(st);
+          }, 100);
+        }
+      });
+
+      // and show all results when clicking this button
+      //$(".all").click(function () {
+      //  showAll();
+      //});
+
+      var queryString = window.location.search;
+      queryString = queryString
+        .replaceAll("?=", "")
+        .replaceAll("+", " ")
+        .replaceAll("%20", " ");
+      $("#searchterm").val(queryString);
+      console.log(queryString);
+      if (queryString != "") {
+        search(queryString);
+      }
+    </script>
+  </body>
+</html>

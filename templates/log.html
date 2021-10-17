@@ -3,9 +3,9 @@ macro lower_case(text) %}{{text[0]|lower}}{{text[1:] }} {% endmacro %}
 <!DOCTYPE html>
 <html>
   <meta charset="utf-8" />
-  <title>{{garden.title}}</title>
+  <title>{{garden.title}} log</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="assets/mini.css" />
+  <link rel="stylesheet" href="../assets/mini.css" />
 
   <meta name="description" content="{{garden.description}}" />
   <meta name="keywords" content="{{garden.keywords}}" />
@@ -14,7 +14,20 @@ macro lower_case(text) %}{{text[0]|lower}}{{text[1:] }} {% endmacro %}
   <body>
     {% include 'header.html' %}
     <main>
-      <div id="about">{{content}}</div>
+    {% for date in garden.notes_by_month()%}
+       
+    {%for note in date%}
+    {% if loop.index == 1 %}
+    {{note.date.month}}/{{note.date.year}}
+    <ul>
+    {%endif%}
+    
+      <li><a href="../{{note.folderurl}}#{{note.url}}">{{sentence_case(note.fmatter['title'])}}</a>{% if note.fmatter.updated is defined %}<small>~ Updated {{note.fmatter.updated}}</small>{% endif %}</li>
+
+    {% endfor %}
+    </ul> 
+    
+    {% endfor %}
     </main>
     <!-- footer -->
     {% include 'footer.html' %}
