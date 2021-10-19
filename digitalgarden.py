@@ -28,9 +28,7 @@ class DigitalGarden:
         self.template_page = self.jinja.get_template(self.template_page)
         self.assets = pathlib.Path(self.template_assets)
 
-        print (self.out_folder.iterdir())
-        for x in self.out_folder.iterdir():
-            print(x)
+
         ''' 
         #################
          folders > notes
@@ -39,14 +37,13 @@ class DigitalGarden:
         self.folders = []
         for f in self.md_files.iterdir():
 
-            #if f.is_dir: print(f)
+            
             if f.is_dir:
                 if str(self.img_folder) not in str(f):
                     folder = Folder(f, self.md_files, None)
                     self.folders.append(folder)
-
-    def cultivate(self):
-        ''' 
+        
+                ''' 
         #################
          get all folders
         #################
@@ -57,6 +54,7 @@ class DigitalGarden:
             if f.allchildren() != None:
                 self.allfolders += f.allchildren()
 
+    def cultivate(self):
         ''' 
         #################
           gen wiki links
@@ -126,6 +124,8 @@ class DigitalGarden:
         for f in self.allfolders:
             for n in f.notes:
                 notes_.append(n)
+        
+        
 
         notesbydate = sorted(notes_, key=lambda note: datetime.strptime(
             note.fmatter['date'], "%d/%m/%Y"), reverse=True)
@@ -165,7 +165,7 @@ class DigitalGarden:
         '''
         self.sow_page("search.html", self.out_folder / "search", None)
 
-        self.sow_page("log.html", self.out_folder, None)
+        self.sow_page("log.html", self.out_folder / "log" , None)
 
         f = open(self.homepage_md, 'r')
         homepage = mdtohtml(f.read())

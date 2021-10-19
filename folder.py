@@ -54,8 +54,7 @@ class Folder:
 
 
         self.parents = self.retrieve_parents(self)
-        for p in self.parents:
-            print (p.title)
+
 
         self.notes = []
         for f in self.source.glob("*.md"):
@@ -94,9 +93,7 @@ class Folder:
                 
             if len(c.children) != 0:
                 children.append(c.children)
-                   
-            #if len(children)==0:
-                #break
-        
+              
+     
         return children
 
